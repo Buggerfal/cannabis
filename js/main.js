@@ -2,14 +2,14 @@ const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 let playerInfo;
 let allEnemys = [];
+let score = 0;
 
 const styleForAllText = new window.PIXI.TextStyle({
     fontFamily: 'myStyle',
     fontWeight: 'bold',
     fontStyle: 'normal',
-    fontSize: 15,
-    fill: '#ffffff',
-    align: 'center'
+    fontSize: 30,
+    fill: '#ffffff'
 });
 //---------------GAME ------------------//
 let Game = function() {
@@ -17,6 +17,7 @@ let Game = function() {
     self.initApp();
     self.addPlayer(WIDTH / 2, HEIGHT / 2);
     self.drawAim(WIDTH / 2, HEIGHT / 2);
+    self.playerScore();
 
     setInterval(function() {
         new Enemy(self.app);
@@ -84,6 +85,24 @@ Game.prototype._endGame = function() {
     // console.log("END GAME");
 };
 
+Game.prototype.playerScore = function() {
+    const ticker = new window.PIXI.ticker.Ticker();
+    let playerScoreText = new PIXI.Text(score, styleForAllText);
+
+    ticker.stop();
+    ticker.add(() => {
+        this.app.stage.removeChild(playerScoreText);
+        playerScoreText = new PIXI.Text(score, styleForAllText);
+
+        playerScoreText.x = 30;
+        playerScoreText.y = 30;
+
+        this.app.stage.addChild(playerScoreText);
+
+    });
+
+    ticker.start();
+};
 //---------------GAME END------------------//
 
 //---------------SHOT ------------------//
@@ -131,38 +150,25 @@ Shot.prototype._moveShot = function(shot, event) {
         shot.scale.x += 0.005;
         shot.scale.y += 0.005;
 
-        this._checkСollision(shot);
+        this._checkСollision(shot, ticker);
     });
 
     ticker.start();
 };
 
-Shot.prototype._checkСollision = function(shot) {
-    //TODO MAP
-    allEnemys = allEnemys.filter(function(element, index) {
-        return element.data.id != enemy.data.id;
-    });
-
+Shot.prototype._checkСollision = function(shot, ticker) {
     for (let i = 0; i < allEnemys.length; i++) {
         var isCollision = getIsCollide(shot, allEnemys[i]);
         if (isCollision) {
+            score += 100;
             shot.destroy();
             allEnemys[i].destroy();
             allEnemys.splice(i, 1);
-
-            // delete allEnemys[i];
-            // allEnemys.splice(allEnemys.indexOf(i), 1);
-
-            // self._destroy(shot, ticker);
+            ticker.stop();
+            ticker.destroy();
         };
     };
 };
-
-// Shot.prototype._destroy = function(shot, ticker) {
-//     shot.destroy();
-//     ticker.stop();
-//     ticker.destroy();
-// }
 
 //---------------SHOT END------------------//
 
@@ -188,9 +194,6 @@ const Enemy = function(app) {
 };
 
 Enemy.prototype._moveEnemy = function(enemy) {
-    // console.log('all', allEnemys);
-    // console.log('enemy', enemy.x);
-
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
     const stepY = (enemy.y - HEIGHT / 2) / 100;
@@ -204,18 +207,10 @@ Enemy.prototype._moveEnemy = function(enemy) {
             allEnemys = allEnemys.filter(function(element, index) {
                 return element.data.id != enemy.data.id;
             });
+
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
-
-            // for (let i = 0; i <= allEnemys.length; i++) {
-            //     if (enemy.data.id === allEnemys[i].data.id) {
-            //         allEnemys.splice(i, 1);
-            //         enemy.destroy();
-            //         ticker.stop();
-            //         ticker.destroy();
-            //     }
-            // }
 
             return;
         }
@@ -319,3 +314,9 @@ function generatedId() {
 //---------------GLOBAL END--------------//
 
 let newGame = new Game();
+
+/*
+    GULP
+    ESLINT
+    GIT IGNORE
+*/
