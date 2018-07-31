@@ -1,5 +1,5 @@
-let WIDTH = window.innerWidth;
-let HEIGHT = window.innerHeight;
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
 let playerInfo;
 let allEnemys = [];
 
@@ -14,40 +14,39 @@ const styleForAllText = new window.PIXI.TextStyle({
 //---------------GAME ------------------//
 let Game = function() {
     const self = this;
-    self._initApp();
-    self._addPlayer(WIDTH / 2, HEIGHT / 2);
-    self._drawAim(WIDTH / 2, HEIGHT / 2);
+    self.initApp();
+    self.addPlayer(WIDTH / 2, HEIGHT / 2);
+    self.drawAim(WIDTH / 2, HEIGHT / 2);
 
     setInterval(function() {
-        new Enemy(randomInteger(0, WIDTH), randomInteger(0, HEIGHT), 1, self.app);
+        new Enemy(self.app);
     }, 1000);
 
-    document.addEventListener('mousemove', function(e) {
+    document.addEventListener('mousemove', function(event) {
         const playerCenter = {
             x: self._player.x,
             y: self._player.y
         };
 
-        const angle = Math.atan2(e.clientX - playerCenter.x, -(e.clientY - playerCenter.y)) * (180 / Math.PI);
+        const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
 
-        self._rotatePlayer(angle);
-        self._aim.x = e.clientX;
-        self._aim.y = e.clientY;
+        self.rotatePlayer(angle);
+        self._aim.x = event.clientX;
+        self._aim.y = event.clientY;
     });
 };
 
-Game.prototype._initApp = function() {
+Game.prototype.initApp = function() {
     const self = this;
     self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
     document.body.appendChild(self.app.view);
 
-    document.addEventListener('click', function(e) {
-        let newShot = new Shot(e.clientX, e.clientY, self.app, e);
+    document.addEventListener('click', function(event) {
+        let newShot = new Shot(event.clientX, event.clientY, self.app, event);
     });
 };
 
-Game.prototype._drawAim = function(x, y) {
-    const self = this;
+Game.prototype.drawAim = function(x, y) {
     let aim = PIXI.Sprite.fromImage('images/aim.png');
 
     aim.anchor.set(0.5);
@@ -61,8 +60,8 @@ Game.prototype._drawAim = function(x, y) {
     this._aim = aim;
 }
 
-Game.prototype._addPlayer = function(x, y) {
-    let player = PIXI.Sprite.fromImage('images/player.png');
+Game.prototype.addPlayer = function(x, y) {
+    const player = PIXI.Sprite.fromImage('images/player.png');
 
     player.anchor.set(0.5);
     player.width = 140;
@@ -77,7 +76,7 @@ Game.prototype._addPlayer = function(x, y) {
     playerInfo = player;
 };
 
-Game.prototype._rotatePlayer = function(deg) {
+Game.prototype.rotatePlayer = function(deg) {
     this._player.rotation = inRad(deg);
 };
 
@@ -88,14 +87,12 @@ Game.prototype._endGame = function() {
 //---------------GAME END------------------//
 
 //---------------SHOT ------------------//
-let Shot = function(x, y, app, e) {
-    const self = this;
-
-    self._drawShot(app, e);
-    self._coordinatesShot = [{ x: 0, y: 0 }];
+let Shot = function(x, y, app, event) {
+    this._drawShot(app, event);
+    this._coordinatesShot = [{ x: 0, y: 0 }];
 };
 
-Shot.prototype._drawShot = function(app, e) {
+Shot.prototype._drawShot = function(app, event) {
     let shot = PIXI.Sprite.fromImage('images/shot.png');
 
     shot.anchor.set(0.5);
@@ -108,16 +105,16 @@ Shot.prototype._drawShot = function(app, e) {
     app.stage.addChild(shot);
 
     this._shot = shot;
-    self._shot = shot;
 
-    this._moveShot(this._shot, e, WIDTH / 2, HEIGHT / 2);
+
+    this._moveShot(this._shot, event);
 };
 
-Shot.prototype._moveShot = function(shot, e, x, y) {
+Shot.prototype._moveShot = function(shot, event) {
     const ticker = new window.PIXI.ticker.Ticker();
     let step = 0;
-    const stepX = (e.clientX - shot.x) / 20;
-    const stepY = (shot.y - e.clientY) / 20;
+    const stepX = (event.clientX - shot.x) / 20;
+    const stepY = (shot.y - event.clientY) / 20;
 
     ticker.stop();
     ticker.add(() => {
@@ -136,25 +133,26 @@ Shot.prototype._moveShot = function(shot, e, x, y) {
         shot.scale.x += 0.005;
         shot.scale.y += 0.005;
 
-        // this._checkСollision(shot, ticker);
+        this._checkСollision(shot);
     });
 
     ticker.start();
 };
 
-// Shot.prototype._checkСollision = function(shot, ticker) {
-//     for (let i = 0; i < allEnemys.length; i++) {
-//         var isCollision = isCenter(shot, allEnemys[i]);
-//         if (isCollision) {
-// console.log("YEEEE");
-//             // delete allEnemys[i];
-// allEnemys.splice(allEnemys.indexOf(i), 1);
+Shot.prototype._checkСollision = function(shot) {
+    for (let i = 0; i < allEnemys.length; i++) {
+        console.log(allEnemys[i].x);
+        // var isCollision = getIsCollide(shot, allEnemys[i]);
+        // if (isCollision) {
+        //     console.log("YEEEE");
+        //     // delete allEnemys[i];
+        //     allEnemys.splice(allEnemys.indexOf(i), 1);
 
-//             self._destroy(shot, ticker);
-//             // break;
-//         };
-//     };
-// };
+        //     self._destroy(shot, ticker);
+        //     // break;
+        // };
+    };
+};
 
 // Shot.prototype._destroy = function(shot, ticker) {
 //     shot.destroy();
@@ -165,8 +163,7 @@ Shot.prototype._moveShot = function(shot, e, x, y) {
 //---------------SHOT END------------------//
 
 //----------------ENEMY--------------------//
-const Enemy = function(x, y, rotation, app) {
-    const self = this;
+const Enemy = function(app) {
     const enemy = new PIXI.Sprite.fromImage('images/enemy/' + randomInteger(1, 4) + '.png');
     const positionRnd = randomEnemyPosition();
     enemy.anchor.set(0.5);
@@ -177,13 +174,14 @@ const Enemy = function(x, y, rotation, app) {
     enemy.interactive = false;
 
     app.stage.addChild(enemy);
-
-    self._enemy = enemy;
-    self._moveEnemy(self._enemy);
+    enemy.data = { x: 0, y: 0 };
+    this._moveEnemy(enemy);
+    allEnemys.push(enemy);
 };
 
 Enemy.prototype._moveEnemy = function(enemy) {
-    allEnemys.push(enemy);
+    console.log('all', allEnemys);
+    // console.log('enemy', enemy.x);
 
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
@@ -191,18 +189,19 @@ Enemy.prototype._moveEnemy = function(enemy) {
 
     ticker.stop();
     ticker.add(() => {
-        var checkingInfo = isCenter(playerInfo, enemy);
+        const isCollide = getIsCollide(playerInfo, enemy);
 
-        if (checkingInfo) {
+        if (isCollide) {
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
 
             return;
         }
-
         enemy.x += stepX;
         enemy.y -= stepY;
+        enemy.data.x = enemy.x;
+        enemy.data.y = enemy.y;
 
     });
 
@@ -211,14 +210,14 @@ Enemy.prototype._moveEnemy = function(enemy) {
 
 //TODO
 Enemy.prototype._explosion = function(app) {
-    var explosionTextures = [];
+    let explosionTextures = [];
 
     for (let i = 1; i < 11; i++) {
         let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
         explosionTextures.push(texture);
     }
 
-    var explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
+    const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
 
     explosion.x = WIDTH / 2;
     explosion.y = HEIGHT / 2;
@@ -275,14 +274,14 @@ function inRad(num) {
 }
 
 function randomInteger(min, max) {
-    var rand = min + Math.random() * (max - min)
+    let rand = min + Math.random() * (max - min);
     rand = Math.round(rand);
     return rand;
 }
 
-function isCenter(player, enemy) {
-    var XColl = false;
-    var YColl = false;
+function getIsCollide(player, enemy) {
+    let XColl = false;
+    let YColl = false;
 
     if ((player.x + player.width >= enemy.x) && (player.x <= enemy.x + enemy.width)) XColl = true;
     if ((player.y + player.height >= enemy.y) && (player.y <= enemy.y + enemy.height)) YColl = true;
