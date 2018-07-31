@@ -105,8 +105,6 @@ Shot.prototype._drawShot = function(app, event) {
     app.stage.addChild(shot);
 
     this._shot = shot;
-
-
     this._moveShot(this._shot, event);
 };
 
@@ -140,17 +138,23 @@ Shot.prototype._moveShot = function(shot, event) {
 };
 
 Shot.prototype._checkСollision = function(shot) {
-    for (let i = 0; i < allEnemys.length; i++) {
-        console.log(allEnemys[i].x);
-        // var isCollision = getIsCollide(shot, allEnemys[i]);
-        // if (isCollision) {
-        //     console.log("YEEEE");
-        //     // delete allEnemys[i];
-        //     allEnemys.splice(allEnemys.indexOf(i), 1);
+    //TODO MAP
+    allEnemys = allEnemys.filter(function(element, index) {
+        return element.data.id != enemy.data.id;
+    });
 
-        //     self._destroy(shot, ticker);
-        //     // break;
-        // };
+    for (let i = 0; i < allEnemys.length; i++) {
+        var isCollision = getIsCollide(shot, allEnemys[i]);
+        if (isCollision) {
+            shot.destroy();
+            allEnemys[i].destroy();
+            allEnemys.splice(i, 1);
+
+            // delete allEnemys[i];
+            // allEnemys.splice(allEnemys.indexOf(i), 1);
+
+            // self._destroy(shot, ticker);
+        };
     };
 };
 
@@ -174,13 +178,17 @@ const Enemy = function(app) {
     enemy.interactive = false;
 
     app.stage.addChild(enemy);
-    enemy.data = { x: 0, y: 0 };
+    enemy.data = {
+        x: enemy.x,
+        y: enemy.y,
+        id: generatedId()
+    };
     this._moveEnemy(enemy);
     allEnemys.push(enemy);
 };
 
 Enemy.prototype._moveEnemy = function(enemy) {
-    console.log('all', allEnemys);
+    // console.log('all', allEnemys);
     // console.log('enemy', enemy.x);
 
     const ticker = new window.PIXI.ticker.Ticker();
@@ -192,12 +200,26 @@ Enemy.prototype._moveEnemy = function(enemy) {
         const isCollide = getIsCollide(playerInfo, enemy);
 
         if (isCollide) {
+            //TODO MAP
+            allEnemys = allEnemys.filter(function(element, index) {
+                return element.data.id != enemy.data.id;
+            });
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
 
+            // for (let i = 0; i <= allEnemys.length; i++) {
+            //     if (enemy.data.id === allEnemys[i].data.id) {
+            //         allEnemys.splice(i, 1);
+            //         enemy.destroy();
+            //         ticker.stop();
+            //         ticker.destroy();
+            //     }
+            // }
+
             return;
         }
+
         enemy.x += stepX;
         enemy.y -= stepY;
         enemy.data.x = enemy.x;
@@ -211,6 +233,7 @@ Enemy.prototype._moveEnemy = function(enemy) {
 //TODO
 Enemy.prototype._explosion = function(app) {
     let explosionTextures = [];
+    //TODO MAP
 
     for (let i = 1; i < 11; i++) {
         let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
@@ -283,12 +306,16 @@ function getIsCollide(player, enemy) {
     let XColl = false;
     let YColl = false;
 
-    if ((player.x + player.width >= enemy.x) && (player.x <= enemy.x + enemy.width)) XColl = true;
-    if ((player.y + player.height >= enemy.y) && (player.y <= enemy.y + enemy.height)) YColl = true;
+    if ((player.x + player.width / 2 >= enemy.x) && (player.x <= enemy.x + enemy.width / 2)) XColl = true;
+    if ((player.y + player.height / 2 >= enemy.y) && (player.y <= enemy.y + enemy.height / 2)) YColl = true;
 
     if (XColl & YColl) { return true; }
     return false;
 };
+
+function generatedId() {
+    return Math.random().toString(36).substr(2, 9);
+}
 //---------------GLOBAL END--------------//
 
 let newGame = new Game();
