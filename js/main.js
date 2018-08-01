@@ -23,6 +23,8 @@ let Game = function() {
         new Enemy(self.app);
     }, 1000);
 
+    self.createHeart();
+
     document.addEventListener('mousemove', function(event) {
         const playerCenter = {
             x: self._player.x,
@@ -69,7 +71,7 @@ Game.prototype.addPlayer = function(x, y) {
     player.height = 95;
     player.x = x;
     player.y = y;
-    player.interactive = true;
+    setScale(player);
 
     this.app.stage.addChild(player);
 
@@ -86,6 +88,7 @@ Game.prototype._endGame = function() {
 };
 
 Game.prototype.playerScore = function() {
+    const xAndY = percentages(3, 3);
     const ticker = new window.PIXI.ticker.Ticker();
     let playerScoreText = new PIXI.Text(score, styleForAllText);
 
@@ -94,8 +97,8 @@ Game.prototype.playerScore = function() {
         this.app.stage.removeChild(playerScoreText);
         playerScoreText = new PIXI.Text(score, styleForAllText);
 
-        playerScoreText.x = 30;
-        playerScoreText.y = 30;
+        playerScoreText.x = xAndY.x;
+        playerScoreText.y = xAndY.y;
 
         this.app.stage.addChild(playerScoreText);
 
@@ -103,6 +106,25 @@ Game.prototype.playerScore = function() {
 
     ticker.start();
 };
+
+Game.prototype.createHeart = function() {
+    const xAndY = percentages(80, 7);
+    let stepX = xAndY.x;
+    for (var i = 0; i <= 2; i++) {
+        const heart = new PIXI.Sprite.fromImage('images/interface/heart-live.png');
+
+        heart.anchor.set(0.5);
+        heart.width = 100;
+        heart.height = 100;
+        //width heart + widt heart / 2
+        heart.x += stepX;
+        heart.y = xAndY.y;
+        stepX += heart.width + heart.width / 6;
+
+        this.app.stage.addChild(heart);
+    };
+};
+
 //---------------GAME END------------------//
 
 //---------------SHOT ------------------//
@@ -174,6 +196,7 @@ Shot.prototype._checkСollision = function(shot, ticker) {
 
 //----------------ENEMY--------------------//
 const Enemy = function(app) {
+    const self = this;
     const enemy = new PIXI.Sprite.fromImage('images/enemy/' + randomInteger(1, 4) + '.png');
     const positionRnd = randomEnemyPosition();
     enemy.anchor.set(0.5);
@@ -182,7 +205,6 @@ const Enemy = function(app) {
     enemy.x = positionRnd.x;
     enemy.y = positionRnd.y;
     enemy.interactive = false;
-
     app.stage.addChild(enemy);
     enemy.data = {
         x: enemy.x,
@@ -193,6 +215,7 @@ const Enemy = function(app) {
     allEnemys.push(enemy);
 };
 
+let countLife = 0;
 Enemy.prototype._moveEnemy = function(enemy) {
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
@@ -203,15 +226,18 @@ Enemy.prototype._moveEnemy = function(enemy) {
         const isCollide = getIsCollide(playerInfo, enemy);
 
         if (isCollide) {
-            //TODO MAP
             allEnemys = allEnemys.filter(function(element, index) {
                 return element.data.id != enemy.data.id;
             });
 
+            countLife += 1;
+
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
-
+            if (countLife === 3) {
+                new GameOver();
+            }
             return;
         }
 
@@ -229,7 +255,6 @@ Enemy.prototype._moveEnemy = function(enemy) {
 Enemy.prototype._explosion = function(app) {
     let explosionTextures = [];
     //TODO MAP
-
     for (let i = 1; i < 11; i++) {
         let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
         explosionTextures.push(texture);
@@ -247,6 +272,9 @@ Enemy.prototype._explosion = function(app) {
     explosion.play();
 };
 
+const GameOver = function() {
+    console.log('THE END')
+};
 //--------------ENEMY END------------------//
 
 //---------------GLOBAL START--------------//
@@ -310,6 +338,19 @@ function getIsCollide(player, enemy) {
 
 function generatedId() {
     return Math.random().toString(36).substr(2, 9);
+}
+
+function percentages(percentX, percentY) {
+    const toX = (WIDTH / 100) * percentX;
+    const toY = (HEIGHT / 100) * percentY;
+    return { x: toX, y: toY };
+}
+
+function setScale(element) {
+    scaleWidth = WIDTH / 1600;
+    scaleHeight = HEIGHT / 800;
+    element.width *= scaleHeight;
+    element.height *= scaleHeight;
 }
 //---------------GLOBAL END--------------//
 
