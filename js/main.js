@@ -3,6 +3,7 @@ const HEIGHT = window.innerHeight;
 let playerInfo;
 let allEnemys = [];
 let score = 0;
+let countLife = 0;
 
 const styleForAllText = new window.PIXI.TextStyle({
     fontFamily: 'myStyle',
@@ -13,29 +14,48 @@ const styleForAllText = new window.PIXI.TextStyle({
 });
 //---------------GAME ------------------//
 let Game = function() {
+    this.initApp();
+    this.buttonPlay(WIDTH / 2, HEIGHT / 2);
+};
+
+Game.prototype.buttonPlay = function(x, y) {
     const self = this;
-    self.initApp();
-    self.addPlayer(WIDTH / 2, HEIGHT / 2);
-    self.drawAim(WIDTH / 2, HEIGHT / 2);
-    self.playerScore();
+    const buttonStart = PIXI.Sprite.fromImage('images/interface/button-play.png');
 
-    setInterval(function() {
-        new Enemy(self.app);
-    }, 1000);
+    buttonStart.anchor.set(0.5);
+    buttonStart.width = 200;
+    buttonStart.height = 200;
+    buttonStart.x = x;
+    buttonStart.y = y;
+    buttonStart.interactive = true;
+    setScale(buttonStart);
 
-    self.createHeart();
+    this.app.stage.addChild(buttonStart);
 
-    document.addEventListener('mousemove', function(event) {
-        const playerCenter = {
-            x: self._player.x,
-            y: self._player.y
-        };
+    buttonStart.on("click", function() {
+        self.app.stage.removeChild(buttonStart);
 
-        const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
+        self.addPlayer(WIDTH / 2, HEIGHT / 2);
+        self.drawAim(WIDTH / 2, HEIGHT / 2);
+        self.playerScore();
+        self.createHeart();
 
-        self.rotatePlayer(angle);
-        self._aim.x = event.clientX;
-        self._aim.y = event.clientY;
+        setInterval(function() {
+            new Enemy(self.app);
+        }, 1000);
+
+        document.addEventListener('mousemove', function(event) {
+            const playerCenter = {
+                x: self._player.x,
+                y: self._player.y
+            };
+
+            const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
+
+            self.rotatePlayer(angle);
+            self._aim.x = event.clientX;
+            self._aim.y = event.clientY;
+        });
     });
 };
 
@@ -110,7 +130,7 @@ Game.prototype.playerScore = function() {
 Game.prototype.createHeart = function() {
     const xAndY = percentages(80, 7);
     let stepX = xAndY.x;
-    for (var i = 0; i <= 2; i++) {
+    for (let i = 0; i <= 2; i++) {
         const heart = new PIXI.Sprite.fromImage('images/interface/heart-live.png');
 
         heart.anchor.set(0.5);
@@ -119,6 +139,7 @@ Game.prototype.createHeart = function() {
         //width heart + widt heart / 2
         heart.x += stepX;
         heart.y = xAndY.y;
+        setScale(heart);
         stepX += heart.width + heart.width / 6;
 
         this.app.stage.addChild(heart);
@@ -142,6 +163,7 @@ Shot.prototype._drawShot = function(app, event) {
     shot.x = WIDTH / 2;
     shot.y = HEIGHT / 2;
     shot.interactive = false;
+    setScale(shot);
 
     app.stage.addChild(shot);
 
@@ -196,7 +218,6 @@ Shot.prototype._checkСollision = function(shot, ticker) {
 
 //----------------ENEMY--------------------//
 const Enemy = function(app) {
-    const self = this;
     const enemy = new PIXI.Sprite.fromImage('images/enemy/' + randomInteger(1, 4) + '.png');
     const positionRnd = randomEnemyPosition();
     enemy.anchor.set(0.5);
@@ -204,6 +225,7 @@ const Enemy = function(app) {
     enemy.height = 100;
     enemy.x = positionRnd.x;
     enemy.y = positionRnd.y;
+    setScale(enemy);
     enemy.interactive = false;
     app.stage.addChild(enemy);
     enemy.data = {
@@ -215,8 +237,7 @@ const Enemy = function(app) {
     allEnemys.push(enemy);
 };
 
-let countLife = 0;
-Enemy.prototype._moveEnemy = function(enemy) {
+Enemy.prototype._moveEnemy = function(enemy, app) {
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
     const stepY = (enemy.y - HEIGHT / 2) / 100;
@@ -236,7 +257,7 @@ Enemy.prototype._moveEnemy = function(enemy) {
             ticker.stop();
             ticker.destroy();
             if (countLife === 3) {
-                new GameOver();
+                GameOver(app);
             }
             return;
         }
@@ -251,8 +272,7 @@ Enemy.prototype._moveEnemy = function(enemy) {
     ticker.start();
 };
 
-//TODO
-Enemy.prototype._explosion = function(app) {
+const explosion = function(app, x, y) {
     let explosionTextures = [];
     //TODO MAP
     for (let i = 1; i < 11; i++) {
@@ -262,8 +282,8 @@ Enemy.prototype._explosion = function(app) {
 
     const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
 
-    explosion.x = WIDTH / 2;
-    explosion.y = HEIGHT / 2;
+    explosion.x = x;
+    explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
 
@@ -272,8 +292,9 @@ Enemy.prototype._explosion = function(app) {
     explosion.play();
 };
 
-const GameOver = function() {
-    console.log('THE END')
+const GameOver = function(app) {
+    console.log('THE END');
+
 };
 //--------------ENEMY END------------------//
 
