@@ -4,6 +4,7 @@ let playerInfo;
 let allEnemys = [];
 let score = 0;
 let countLife = 0;
+let explosionTextures = [];
 
 const styleForAllText = new window.PIXI.TextStyle({
     fontFamily: 'myStyle',
@@ -39,6 +40,7 @@ Game.prototype.buttonPlay = function(x, y) {
         self.drawAim(WIDTH / 2, HEIGHT / 2);
         self.playerScore();
         self.createHeart();
+        initAnimation();
 
         setInterval(function() {
             new Enemy(self.app);
@@ -56,17 +58,18 @@ Game.prototype.buttonPlay = function(x, y) {
             self._aim.x = event.clientX;
             self._aim.y = event.clientY;
         });
+
+        document.addEventListener('click', function(event) {
+            let newShot = new Shot(event.clientX, event.clientY, self.app, event);
+        });
     });
 };
+
 
 Game.prototype.initApp = function() {
     const self = this;
     self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
     document.body.appendChild(self.app.view);
-
-    document.addEventListener('click', function(event) {
-        let newShot = new Shot(event.clientX, event.clientY, self.app, event);
-    });
 };
 
 Game.prototype.drawAim = function(x, y) {
@@ -168,10 +171,10 @@ Shot.prototype._drawShot = function(app, event) {
     app.stage.addChild(shot);
 
     this._shot = shot;
-    this._moveShot(this._shot, event);
+    this._moveShot(this._shot, event, app);
 };
 
-Shot.prototype._moveShot = function(shot, event) {
+Shot.prototype._moveShot = function(shot, event, app) {
     const ticker = new window.PIXI.ticker.Ticker();
     let step = 0;
     const stepX = (event.clientX - shot.x) / 20;
@@ -194,16 +197,17 @@ Shot.prototype._moveShot = function(shot, event) {
         shot.scale.x += 0.005;
         shot.scale.y += 0.005;
 
-        this._checkСollision(shot, ticker);
+        this._checkСollision(shot, ticker, app);
     });
 
     ticker.start();
 };
 
-Shot.prototype._checkСollision = function(shot, ticker) {
+Shot.prototype._checkСollision = function(shot, ticker, app) {
     for (let i = 0; i < allEnemys.length; i++) {
         var isCollision = getIsCollide(shot, allEnemys[i]);
         if (isCollision) {
+            new explosions(app, shot.x, shot.y)
             score += 100;
             shot.destroy();
             allEnemys[i].destroy();
@@ -272,24 +276,22 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
     ticker.start();
 };
 
-const explosion = function(app, x, y) {
-    let explosionTextures = [];
-    //TODO MAP
-    for (let i = 1; i < 11; i++) {
-        let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
-        explosionTextures.push(texture);
-    }
-
+const explosions = function(app, x, y) {
     const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
 
     explosion.x = x;
     explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
+    console.log("explosion", explosion);
 
     app.stage.addChild(explosion);
 
     explosion.play();
+    setTimeout(function() {
+        explosion.stop();
+        explosion.destroy();
+    }, 550);
 };
 
 const GameOver = function(app) {
@@ -373,6 +375,13 @@ function setScale(element) {
     element.width *= scaleHeight;
     element.height *= scaleHeight;
 }
+
+function initAnimation() {
+    for (let i = 1; i < 11; i++) {
+        let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
+        explosionTextures.push(texture);
+    }
+}
 //---------------GLOBAL END--------------//
 
 let newGame = new Game();
@@ -381,4 +390,10 @@ let newGame = new Game();
     GULP
     ESLINT
     GIT IGNORE
+
+    SUPER POWER  
+
+    document.addEventListener('mousemove', function(event) {
+    let newShot = new Shot(event.clientX, event.clientY, self.app, event); 
+}
 */
