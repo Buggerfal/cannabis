@@ -237,7 +237,7 @@ const Enemy = function(app) {
         y: enemy.y,
         id: generatedId()
     };
-    this._moveEnemy(enemy);
+    this._moveEnemy(enemy, app);
     allEnemys.push(enemy);
 };
 
@@ -256,6 +256,8 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
             });
 
             countLife += 1;
+
+            new explosions(app, enemy.x, enemy.y)
 
             enemy.destroy();
             ticker.stop();
