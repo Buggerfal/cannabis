@@ -60,7 +60,7 @@ Game.prototype.buttonPlay = function(x, y) {
         });
 
         document.addEventListener('click', function(event) {
-            let newShot = new Shot(event.clientX, event.clientY, self.app, event);
+            let newShot = new Shot(event.clientX, event.clientY, self.app);
         });
     });
 };
@@ -152,12 +152,13 @@ Game.prototype.createHeart = function() {
 //---------------GAME END------------------//
 
 //---------------SHOT ------------------//
-let Shot = function(x, y, app, event) {
-    this._drawShot(app, event);
+let Shot = function(x, y, app) {
+    this._app = app;
+    this._drawShot(x, y);
     this._coordinatesShot = [{ x: 0, y: 0 }];
 };
 
-Shot.prototype._drawShot = function(app, event) {
+Shot.prototype._drawShot = function(x, y) {
     let shot = PIXI.Sprite.fromImage('images/shot.png');
 
     shot.anchor.set(0.5);
@@ -168,23 +169,25 @@ Shot.prototype._drawShot = function(app, event) {
     shot.interactive = false;
     setScale(shot);
 
-    app.stage.addChild(shot);
+    this._app.stage.addChild(shot);
 
     this._shot = shot;
-    this._moveShot(this._shot, event, app);
+    this._moveShot(x, y);
 };
 
-Shot.prototype._moveShot = function(shot, event, app) {
+Shot.prototype._moveShot = function(x, y) {
     const ticker = new window.PIXI.ticker.Ticker();
     let step = 0;
-    const stepX = (event.clientX - shot.x) / 20;
-    const stepY = (shot.y - event.clientY) / 20;
+    const stepX = (x - this._shot.x) / 20;
+    const stepY = (this._shot.y - y) / 20;
 
     ticker.stop();
     ticker.add(() => {
-
-        if (shot.x > WIDTH || shot.x < 0 || shot.y > HEIGHT || shot.y < 0 || step == 100 || shot.scale.x > 0.30) {
-            shot.destroy();
+        if(this.destroy == true){
+            console.log("asd");
+        }
+        if (this._shot.x > WIDTH || this._shot.x < 0 || this._shot.y > HEIGHT || this._shot.y < 0 || step == 100 || this._shot.scale.x > 0.30) {
+            this._shot.destroy();
             ticker.stop();
             ticker.destroy();
 
@@ -192,30 +195,32 @@ Shot.prototype._moveShot = function(shot, event, app) {
         }
 
         step++;
-        shot.x += stepX;
-        shot.y -= stepY;
-        shot.scale.x += 0.005;
-        shot.scale.y += 0.005;
+        this._shot.x += stepX;
+        this._shot.y -= stepY;
+        this._shot.scale.x += 0.005;
+        this._shot.scale.y += 0.005;
 
-        this._checkСollision(shot, ticker, app);
+        this._checkСollision(ticker);
     });
 
     ticker.start();
 };
 
-Shot.prototype._checkСollision = function(shot, ticker, app) {
+Shot.prototype._checkСollision = function(ticker) {
     for (let i = 0; i < allEnemys.length; i++) {
-        var isCollision = getIsCollide(shot, allEnemys[i]);
+        var isCollision = getIsCollide(this._shot, allEnemys[i]);
         if (isCollision) {
-            new explosions(app, shot.x, shot.y)
+            new explosions(this._app, this._shot.x, this._shot.y)
             score += 100;
-            shot.destroy();
-            allEnemys[i].destroy();
-            allEnemys.splice(i, 1);
             ticker.stop();
             ticker.destroy();
-        };
-    };
+            this.destroy = true;
+            this._shot.destroy();
+            allEnemys[i].destroy();
+            allEnemys.splice(i, 1);
+            return;
+        }
+    }
 };
 
 //---------------SHOT END------------------//
@@ -232,13 +237,14 @@ const Enemy = function(app) {
     setScale(enemy);
     enemy.interactive = false;
     app.stage.addChild(enemy);
-    enemy.data = {
+    this.data = {
         x: enemy.x,
         y: enemy.y,
         id: generatedId()
     };
+    this._enemy = enemy;
     this._moveEnemy(enemy, app);
-    allEnemys.push(enemy);
+    allEnemys.push(this);
 };
 
 Enemy.prototype._moveEnemy = function(enemy, app) {
@@ -248,11 +254,12 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
 
     ticker.stop();
     ticker.add(() => {
-        const isCollide = getIsCollide(playerInfo, enemy);
+        const isCollide = getIsCollide(playerInfo, this);
 
         if (isCollide) {
+            const id = this.data.id;
             allEnemys = allEnemys.filter(function(element, index) {
-                return element.data.id != enemy.data.id;
+                return element.data.id != id;
             });
 
             countLife += 1;
@@ -270,12 +277,18 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
 
         enemy.x += stepX;
         enemy.y -= stepY;
-        enemy.data.x = enemy.x;
-        enemy.data.y = enemy.y;
+        // enemy.data.x = enemy.x;
+        // enemy.data.y = enemy.y;
 
     });
-
+    this._ticker = ticker;
     ticker.start();
+};
+
+Enemy.prototype.destroy = function() {
+    this._ticker.stop();
+    this._ticker.destroy();
+    this._enemy.destroy();
 };
 
 const explosions = function(app, x, y) {
@@ -285,7 +298,6 @@ const explosions = function(app, x, y) {
     explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
-    console.log("explosion", explosion);
 
     app.stage.addChild(explosion);
 
@@ -351,11 +363,16 @@ function randomInteger(min, max) {
 }
 
 function getIsCollide(player, enemy) {
+    enemy = enemy._enemy;
     let XColl = false;
     let YColl = false;
+try{
 
     if ((player.x + player.width / 2 >= enemy.x) && (player.x <= enemy.x + enemy.width / 2)) XColl = true;
     if ((player.y + player.height / 2 >= enemy.y) && (player.y <= enemy.y + enemy.height / 2)) YColl = true;
+} catch {
+    console.log("1");
+}
 
     if (XColl & YColl) { return true; }
     return false;
@@ -393,9 +410,9 @@ let newGame = new Game();
     ESLINT
     GIT IGNORE
 
-    SUPER POWER  
+    SUPER POWER
 
     document.addEventListener('mousemove', function(event) {
-    let newShot = new Shot(event.clientX, event.clientY, self.app, event); 
+    let newShot = new Shot(event.clientX, event.clientY, self.app, event);
 }
 */
