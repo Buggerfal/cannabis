@@ -18,6 +18,7 @@ let Game = function() {
 };
 
 Game.prototype.buttonPlay = function(x, y) {
+    new Gameplay(this);
     const self = this;
     const buttonStart = PIXI.Sprite.fromImage('images/interface/button-play.png');
 
