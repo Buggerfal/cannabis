@@ -2,8 +2,6 @@ const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 let playerInfo;
 let allEnemys = [];
-let score = 0;
-let countLife = 0;
 let explosionTextures = [];
 
 const styleForAllText = new window.PIXI.TextStyle({
@@ -15,6 +13,7 @@ const styleForAllText = new window.PIXI.TextStyle({
 });
 //---------------GAME ------------------//
 let Game = function() {
+    this._score = 0;
     this.initApp();
     this.buttonPlay(WIDTH / 2, HEIGHT / 2);
 };
@@ -42,8 +41,11 @@ Game.prototype.buttonPlay = function(x, y) {
         self.createHeart();
         initAnimation();
         setInterval(function() {
-            new Enemy(self.app);
+            const enemy = new Enemy(self);
+            allEnemys.push(enemy);
         }, 1000);
+
+        // playSound('main.mp3');
 
         document.addEventListener('mousemove', function(event) {
             const playerCenter = {
@@ -58,12 +60,36 @@ Game.prototype.buttonPlay = function(x, y) {
             self._aim.y = event.clientY;
         });
 
-        document.addEventListener('click', function(event) {
-            let newShot = new Shot(event.clientX, event.clientY, self.app);
-        });
+
+        setTimeout(() => {
+            document.addEventListener('click', function(event) {
+                let newShot = new Shot(event.clientX, event.clientY, self);
+            });
+
+        }, 0);
+
     });
 };
 
+Game.prototype.superPower = function() {
+    const self = this;
+    let x = 0,
+        y = 0;
+
+    document.addEventListener('mousemove', function(event) {
+        x = event.clientX;
+        y = event.clientY;
+    });
+
+
+    let interval = setInterval(function(event) {
+        let newShot = new Shot(x, y, self);
+    }, 100);
+
+    setTimeout(function() {
+        clearInterval(interval);
+    }, 7000);
+};
 
 Game.prototype.initApp = function() {
     const self = this;
@@ -106,18 +132,18 @@ Game.prototype.rotatePlayer = function(deg) {
 };
 
 Game.prototype._endGame = function() {
-    // console.log("END GAME");
+    console.log("END GAME");
 };
 
 Game.prototype.playerScore = function() {
     const xAndY = percentages(3, 3);
     const ticker = new window.PIXI.ticker.Ticker();
-    let playerScoreText = new PIXI.Text(score, styleForAllText);
+    let playerScoreText = new PIXI.Text(this._score, styleForAllText);
 
     ticker.stop();
     ticker.add(() => {
         this.app.stage.removeChild(playerScoreText);
-        playerScoreText = new PIXI.Text(score, styleForAllText);
+        playerScoreText = new PIXI.Text(this._score, styleForAllText);
 
         playerScoreText.x = xAndY.x;
         playerScoreText.y = xAndY.y;
@@ -129,7 +155,21 @@ Game.prototype.playerScore = function() {
     ticker.start();
 };
 
+Game.prototype.decreaseScore = function() {
+    let lastElement = this._scoreHearts.pop();
+
+    if (lastElement) {
+        lastElement.destroy();
+        this.superPower();
+    }
+
+    if (this._scoreHearts.length <= 0) {
+        this._endGame();
+    }
+};
+
 Game.prototype.createHeart = function() {
+    this._scoreHearts = [];
     const xAndY = percentages(80, 7);
     let stepX = xAndY.x;
     for (let i = 0; i <= 2; i++) {
@@ -145,14 +185,20 @@ Game.prototype.createHeart = function() {
         stepX += heart.width + heart.width / 6;
 
         this.app.stage.addChild(heart);
+        this._scoreHearts.push(heart);
     };
+};
+
+Game.prototype.hitEnemy = function() {
+    this._score += 100;
 };
 
 //---------------GAME END------------------//
 
 //---------------SHOT ------------------//
-let Shot = function(x, y, app) {
-    this._app = app;
+let Shot = function(x, y, game) {
+    this._game = game;
+    this._app = game.app;
     this._drawShot(x, y);
     this._coordinatesShot = [{ x: 0, y: 0 }];
 };
@@ -172,8 +218,6 @@ Shot.prototype._drawShot = function(x, y) {
 
     this._shot = shot;
     this._moveShot(x, y);
-    playSound();
-
 };
 
 Shot.prototype._moveShot = function(x, y) {
@@ -210,12 +254,15 @@ Shot.prototype._checkСollision = function() {
     for (let i = 0; i < allEnemys.length; i++) {
         var isCollision = getIsCollide(this._shot, allEnemys[i]);
         if (isCollision) {
-            new explosions(this._app, this._shot.x, this._shot.y)
-            score += 100;
+            new explosions(this._app, this._shot.x, this._shot.y);
+
+            this._game.hitEnemy();
 
             this._ticker.stop();
             this._ticker.destroy();
             this._shot.destroy();
+            playSound('explosion.mp3');
+
             allEnemys[i].destroy();
 
             allEnemys.splice(i, 1);
@@ -229,7 +276,10 @@ Shot.prototype._checkСollision = function() {
 //---------------SHOT END------------------//
 
 //----------------ENEMY--------------------//
-const Enemy = function(app) {
+const Enemy = function(game) {
+    this._game = game;
+    this._app = game.app;
+
     const enemy = new PIXI.Sprite.fromImage('images/enemy/' + randomInteger(1, 4) + '.png');
     const positionRnd = randomEnemyPosition();
     enemy.anchor.set(0.5);
@@ -240,21 +290,16 @@ const Enemy = function(app) {
     setScale(enemy);
     enemy.interactive = false;
 
-    app.stage.addChild(enemy);
-
-    this.data = {
-        x: enemy.x,
-        y: enemy.y,
-        id: generatedId()
-    };
+    this._app.stage.addChild(enemy);
 
     this._enemy = enemy;
-    this._moveEnemy(enemy, app);
-
-    allEnemys.push(this);
+    this._moveEnemy();
 };
 
-Enemy.prototype._moveEnemy = function(enemy, app) {
+Enemy.prototype._moveEnemy = function() {
+    const enemy = this._enemy,
+        app = this._app;
+
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
     const stepY = (enemy.y - HEIGHT / 2) / 100;
@@ -264,22 +309,17 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
         const isCollide = getIsCollide(playerInfo, this);
 
         if (isCollide) {
-            const id = this.data.id;
-            allEnemys = allEnemys.filter(function(element, index) {
-                return element.data.id != id;
-            });
+            this._game.decreaseScore();
 
-            countLife += 1;
+            allEnemys = allEnemys.filter((element, index) => {
+                return element != this;
+            });
 
             new explosions(app, enemy.x, enemy.y)
 
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
-
-            if (countLife === 3) {
-                GameOver(app);
-            }
 
             return;
         }
@@ -315,14 +355,12 @@ const explosions = function(app, x, y) {
     };
 };
 
-const playSound = function() {
-    const sound = PIXI.sound.Sound.from('music/main.mp3');
+const playSound = function(name) {
+    const path = `music/${name}`;
+    const sound = PIXI.sound.Sound.from(path);
     sound.play();
 };
 
-const GameOver = function(app) {
-    console.log('THE END');
-};
 //--------------ENEMY END------------------//
 
 //---------------GLOBAL START--------------//
@@ -396,8 +434,8 @@ function percentages(percentX, percentY) {
 }
 
 function setScale(element) {
-    scaleWidth = WIDTH / 1600;
-    scaleHeight = HEIGHT / 800;
+    const scaleWidth = WIDTH / 1600;
+    const scaleHeight = HEIGHT / 800;
     element.width *= scaleHeight;
     element.height *= scaleHeight;
 }
@@ -416,6 +454,7 @@ function isOutPosition(sprite) {
         return false;
     }
 }
+
 //---------------GLOBAL END--------------//
 
 let newGame = new Game();
@@ -423,11 +462,20 @@ let newGame = new Game();
 /*
     GULP
     ESLINT
-    GIT IGNORE
 
     SUPER POWER
+    
+setInterval(function (){
+   allEnemys.forEach((en) => {
+		document.dispatchEvent(new MouseEvent('click', {
+		bubbles: true,
+		cancelable: true,
+		view: window,
+		clientX: en._enemy.x,
+		clientY: en._enemy.y
+	}));
+	})
 
-    document.addEventListener('mousemove', function(event) {
-    let newShot = new Shot(event.clientX, event.clientY, self.app, event);
-}
+}, 100);
+
 */
