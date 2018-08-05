@@ -41,7 +41,6 @@ Game.prototype.buttonPlay = function(x, y) {
         self.playerScore();
         self.createHeart();
         initAnimation();
-
         setInterval(function() {
             new Enemy(self.app);
         }, 1000);
@@ -173,6 +172,8 @@ Shot.prototype._drawShot = function(x, y) {
 
     this._shot = shot;
     this._moveShot(x, y);
+    playSound();
+
 };
 
 Shot.prototype._moveShot = function(x, y) {
@@ -183,10 +184,7 @@ Shot.prototype._moveShot = function(x, y) {
 
     ticker.stop();
     ticker.add(() => {
-        if (this.destroy == true) {
-            console.log("asd");
-        }
-        if (this._shot.x > WIDTH || this._shot.x < 0 || this._shot.y > HEIGHT || this._shot.y < 0 || step == 100 || this._shot.scale.x > 0.30) {
+        if (isOutPosition(this._shot)) {
             this._shot.destroy();
             ticker.stop();
             ticker.destroy();
@@ -203,24 +201,29 @@ Shot.prototype._moveShot = function(x, y) {
         this._checkСollision(ticker);
     });
 
+    this._ticker = ticker;
+
     ticker.start();
 };
 
-Shot.prototype._checkСollision = function(ticker) {
+Shot.prototype._checkСollision = function() {
     for (let i = 0; i < allEnemys.length; i++) {
         var isCollision = getIsCollide(this._shot, allEnemys[i]);
         if (isCollision) {
             new explosions(this._app, this._shot.x, this._shot.y)
             score += 100;
-            ticker.stop();
-            ticker.destroy();
-            this.destroy = true;
+
+            this._ticker.stop();
+            this._ticker.destroy();
             this._shot.destroy();
             allEnemys[i].destroy();
+
             allEnemys.splice(i, 1);
+
             return;
         }
     }
+
 };
 
 //---------------SHOT END------------------//
@@ -236,14 +239,18 @@ const Enemy = function(app) {
     enemy.y = positionRnd.y;
     setScale(enemy);
     enemy.interactive = false;
+
     app.stage.addChild(enemy);
+
     this.data = {
         x: enemy.x,
         y: enemy.y,
         id: generatedId()
     };
+
     this._enemy = enemy;
     this._moveEnemy(enemy, app);
+
     allEnemys.push(this);
 };
 
@@ -269,17 +276,16 @@ Enemy.prototype._moveEnemy = function(enemy, app) {
             enemy.destroy();
             ticker.stop();
             ticker.destroy();
+
             if (countLife === 3) {
                 GameOver(app);
             }
+
             return;
         }
 
         enemy.x += stepX;
         enemy.y -= stepY;
-        // enemy.data.x = enemy.x;
-        // enemy.data.y = enemy.y;
-
     });
     this._ticker = ticker;
     ticker.start();
@@ -298,16 +304,20 @@ const explosions = function(app, x, y) {
     explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
+    explosion.loop = false;
     app.stage.addChild(explosion);
 
     explosion.play();
-    // setTimeout(function() {
 
-    // }, 550);
     explosion.onComplete = () => {
         explosion.stop();
         explosion.destroy();
     };
+};
+
+const playSound = function() {
+    const sound = PIXI.sound.Sound.from('music/main.mp3');
+    sound.play();
 };
 
 const GameOver = function(app) {
@@ -367,15 +377,11 @@ function getIsCollide(player, enemy) {
     enemy = enemy._enemy;
     let XColl = false;
     let YColl = false;
-    try {
 
-        if ((player.x + player.width / 2 >= enemy.x) && (player.x <= enemy.x + enemy.width / 2)) XColl = true;
-        if ((player.y + player.height / 2 >= enemy.y) && (player.y <= enemy.y + enemy.height / 2)) YColl = true;
-    } catch {
-        console.log("1");
-    }
-
+    if ((player.x + player.width / 2 >= enemy.x) && (player.x <= enemy.x + enemy.width / 2)) XColl = true;
+    if ((player.y + player.height / 2 >= enemy.y) && (player.y <= enemy.y + enemy.height / 2)) YColl = true;
     if (XColl & YColl) { return true; }
+
     return false;
 };
 
@@ -400,6 +406,14 @@ function initAnimation() {
     for (let i = 1; i < 11; i++) {
         let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
         explosionTextures.push(texture);
+    }
+}
+
+function isOutPosition(sprite) {
+    if (sprite.x > WIDTH || sprite.x < 0 || sprite.y > HEIGHT || sprite.y < 0 || sprite.scale.x > 0.30) {
+        return true;
+    } else {
+        return false;
     }
 }
 //---------------GLOBAL END--------------//
