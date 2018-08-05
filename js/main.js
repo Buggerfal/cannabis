@@ -285,7 +285,6 @@ const explosions = function(app, x, y) {
     explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
-    console.log("explosion", explosion);
 
     app.stage.addChild(explosion);
 
@@ -298,7 +297,6 @@ const explosions = function(app, x, y) {
 
 const GameOver = function(app) {
     console.log('THE END');
-
 };
 //--------------ENEMY END------------------//
 
