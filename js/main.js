@@ -298,14 +298,17 @@ const explosions = function(app, x, y) {
     explosion.y = y;
     explosion.animationSpeed = 0.3;
     explosion.anchor.set(0.5);
-
+    explosion.loop = false;
     app.stage.addChild(explosion);
 
     explosion.play();
-    setTimeout(function() {
+    // setTimeout(function() {
+
+    // }, 550);
+    explosion.onComplete = () => {
         explosion.stop();
         explosion.destroy();
-    }, 550);
+    };
 };
 
 const GameOver = function(app) {
