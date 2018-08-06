@@ -149,9 +149,19 @@ Game.prototype._endGame = function() {
 };
 
 Game.prototype.showInfo = function() {
+    const infoText = "Your hight score : ";
+    const playerHightScore = new PIXI.Text(infoText + this._score, styleForAllText);
+
     this._scoreTicker.stop();
     this._scoreTicker.destroy();
     this._playerScoreText.destroy();
+
+    playerHightScore.x = WIDTH / 2;
+    playerHightScore.y = HEIGHT / 2;
+    playerHightScore.anchor.set(0.5);
+    setScale(playerHightScore);
+
+    this.app.stage.addChild(playerHightScore);
 };
 
 Game.prototype.playerScore = function() {
