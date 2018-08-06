@@ -14,9 +14,13 @@ let Game = function() {
     this._score = 0;
     this._superScore = 0;
     this._allEnemies = [];
-    this.initApp();
     this._intervalEnemy;
     this._intervalSuperPower;
+    this._numberOfDeadEnemies = 0;
+    this._intervalTimeForEnemy = 2000;
+    this._intervalEnemyStep;
+
+    this.initApp();
     this.buttonPlay(WIDTH / 2, HEIGHT / 2);
 };
 
@@ -47,7 +51,7 @@ Game.prototype.buttonPlay = function(x, y) {
         self._intervalEnemy = setInterval(function() {
             const enemy = new Enemy(self);
             self._allEnemies.push(enemy);
-        }, 1000);
+        }, 1500);
 
         document.addEventListener('mousemove', function(event) {
             const playerCenter = {
@@ -96,7 +100,7 @@ Game.prototype.superPower = function() {
 Game.prototype.stopInterval = function() {
     clearInterval(this._intervalEnemy);
     clearInterval(this._intervalSuperPower);
-
+    clearInterval(this._intervalEnemyStep);
 };
 
 Game.prototype.initApp = function() {
@@ -149,7 +153,7 @@ Game.prototype._endGame = function() {
 };
 
 Game.prototype.showInfo = function() {
-    const infoText = "Your hight score : ";
+    const infoText = "Your high score : ";
     const playerHightScore = new PIXI.Text(infoText + this._score, styleForAllText);
 
     this._scoreTicker.stop();
@@ -222,6 +226,7 @@ Game.prototype.createHeart = function() {
 Game.prototype.hitEnemy = function() {
     this._score += 100;
     this._superScore += 100;
+    this.setupIntervalEnemy();
 
     if (this._superScore === 1000) {
         this.superPower();
@@ -229,6 +234,23 @@ Game.prototype.hitEnemy = function() {
     }
 };
 
+Game.prototype.setupIntervalEnemy = function() {
+    this._numberOfDeadEnemies += 1;
+    const self = this;
+
+    if (this._numberOfDeadEnemies === 5) {
+        this._numberOfDeadEnemies = 0;
+        clearInterval(this._intervalEnemyStep);
+
+        this._intervalEnemyStep = setInterval(function() {
+            const enemy = new Enemy(self);
+            self._allEnemies.push(enemy);
+        }, self._intervalTimeForEnemy);
+
+        self._intervalTimeForEnemy -= 50;
+    }
+
+};
 //---------------GAME END------------------//
 
 function randomEnemyPosition() {
@@ -269,8 +291,3 @@ function randomEnemyPosition() {
 }
 
 let newGame = new Game();
-
-/*
-    GULP
-    ESLINT
-*/
