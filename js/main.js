@@ -12,8 +12,11 @@ const styleForAllText = new window.PIXI.TextStyle({
 //---------------GAME ------------------//
 let Game = function() {
     this._score = 0;
+    this._superScore = 0;
     this._allEnemies = [];
     this.initApp();
+    this._intervalEnemy;
+    this._intervalSuperPower;
     this.buttonPlay(WIDTH / 2, HEIGHT / 2);
 };
 
@@ -41,7 +44,7 @@ Game.prototype.buttonPlay = function(x, y) {
         self.playerScore();
         self.createHeart();
         initAnimation();
-        setInterval(function() {
+        self._intervalEnemy = setInterval(function() {
             const enemy = new Enemy(self);
             self._allEnemies.push(enemy);
         }, 1000);
@@ -81,13 +84,19 @@ Game.prototype.superPower = function() {
     });
 
 
-    let interval = setInterval(function(event) {
+    self._intervalSuperPower = setInterval(function(event) {
         let newShot = new Shot(x, y, self);
     }, 100);
 
     setTimeout(function() {
-        clearInterval(interval);
+        clearInterval(self._intervalSuperPower);
     }, 7000);
+};
+
+Game.prototype.stopInterval = function() {
+    clearInterval(this._intervalEnemy);
+    clearInterval(this._intervalSuperPower);
+
 };
 
 Game.prototype.initApp = function() {
@@ -130,7 +139,19 @@ Game.prototype.rotatePlayer = function(deg) {
 };
 
 Game.prototype._endGame = function() {
-    console.log("END GAME");
+    this.stopInterval();
+    this._allEnemies.forEach(function(el) {
+        el.destroy();
+    });
+    this._player.destroy();
+    this._aim.destroy();
+    this.showInfo();
+};
+
+Game.prototype.showInfo = function() {
+    this._scoreTicker.stop();
+    this._scoreTicker.destroy();
+    this._playerScoreText.destroy();
 };
 
 Game.prototype.playerScore = function() {
@@ -150,6 +171,8 @@ Game.prototype.playerScore = function() {
 
     });
 
+    this._playerScoreText = playerScoreText;
+    this._scoreTicker = ticker;
     ticker.start();
 };
 
@@ -158,7 +181,6 @@ Game.prototype.decreaseScore = function() {
 
     if (lastElement) {
         lastElement.destroy();
-        this.superPower();
     }
 
     if (this._scoreHearts.length <= 0) {
@@ -189,6 +211,12 @@ Game.prototype.createHeart = function() {
 
 Game.prototype.hitEnemy = function() {
     this._score += 100;
+    this._superScore += 100;
+
+    if (this._superScore === 1000) {
+        this.superPower();
+        this._superScore = 0;
+    }
 };
 
 //---------------GAME END------------------//
