@@ -2,8 +2,9 @@ let Gameplay = function(game) {
     this._game = game;
     this._app = game.app;
     this.menu;
-    this.drawMenu();
+    this.isDirection = true;
     this._drawIcon(percentages(3, 3));
+    this.drawMenu();
 };
 
 Gameplay.prototype._drawIcon = function(position) {
@@ -25,7 +26,7 @@ Gameplay.prototype._drawIcon = function(position) {
 
     //TODO
     icon.on('click', function() {
-        self.menu.x = 0;
+        self.slideMenu(self.isDirection);
     });
 };
 
@@ -54,6 +55,46 @@ Gameplay.prototype.drawMenu = function() {
     this.menu = gameplayMenu;
 };
 
-Gameplay.prototype.slideMenu = function() {
-    //TODO
+Gameplay.prototype._isMenuAnimationProgress = false;
+
+Gameplay.prototype.slideMenu = function(isDirection) {
+    const self = this;
+    const menu = self.menu;
+
+    if (self._isMenuAnimationProgress) {
+        return;
+    }
+
+    self._isMenuAnimationProgress = true;
+
+    const menuSlideTicker = new window.PIXI.ticker.Ticker();
+
+    menuSlideTicker.stop();
+    menuSlideTicker.add(delta => {
+        let direction = isDirection ? +delta : -delta;
+        let nextMenuPosition = menu.x + direction;
+
+        let menuSlideOut = nextMenuPosition > 0;
+        let menuSlideIn = nextMenuPosition + menu.width < 0;
+
+        if (menuSlideOut) {
+            menu.x = 0;
+        }
+
+        if (menuSlideIn) {
+            menu.x = -menu.width;
+        }
+
+        if (menuSlideOut || menuSlideIn) {
+            self._isMenuAnimationProgress = false;
+            menuSlideTicker.stop();
+            menuSlideTicker.destroy();
+            return;
+        }
+
+        menu.x = nextMenuPosition;
+    });
+
+    menuSlideTicker.speed = 20;
+    menuSlideTicker.start();
 };
