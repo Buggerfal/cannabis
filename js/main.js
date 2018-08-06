@@ -18,7 +18,7 @@ let Game = function() {
 };
 
 Game.prototype.buttonPlay = function(x, y) {
-    new Gameplay(this);
+    const gameplay = new Gameplay(this);
     const self = this;
     const buttonStart = PIXI.Sprite.fromImage('images/interface/button-play.png');
 
@@ -34,6 +34,7 @@ Game.prototype.buttonPlay = function(x, y) {
 
     buttonStart.on("click", function() {
         self.app.stage.removeChild(buttonStart);
+        gameplay.destroyIcon();
 
         self.addPlayer(WIDTH / 2, HEIGHT / 2);
         self.drawAim(WIDTH / 2, HEIGHT / 2);

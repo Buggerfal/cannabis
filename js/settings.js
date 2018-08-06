@@ -2,9 +2,9 @@ let Gameplay = function(game) {
     this._game = game;
     this._app = game.app;
     this.menu;
-    this.isDirection = true;
     this._drawIcon(percentages(3, 3));
     this.drawMenu();
+    this.drawClose();
 };
 
 Gameplay.prototype._drawIcon = function(position) {
@@ -24,15 +24,9 @@ Gameplay.prototype._drawIcon = function(position) {
 
     this._icon = icon;
 
-    //TODO
     icon.on('click', function() {
-        self.slideMenu(self.isDirection);
+        self.slideMenu(true);
     });
-};
-
-//TODO
-Gameplay.prototype.hideIcon = function() {
-    // this._icon.destroy();
 };
 
 Gameplay.prototype.destroyIcon = function() {
@@ -60,6 +54,8 @@ Gameplay.prototype._isMenuAnimationProgress = false;
 Gameplay.prototype.slideMenu = function(isDirection) {
     const self = this;
     const menu = self.menu;
+    const exit = self._exit;
+
 
     if (self._isMenuAnimationProgress) {
         return;
@@ -73,12 +69,14 @@ Gameplay.prototype.slideMenu = function(isDirection) {
     menuSlideTicker.add(delta => {
         let direction = isDirection ? +delta : -delta;
         let nextMenuPosition = menu.x + direction;
+        let nextExitPosition = exit.x + direction;
 
         let menuSlideOut = nextMenuPosition > 0;
         let menuSlideIn = nextMenuPosition + menu.width < 0;
 
         if (menuSlideOut) {
             menu.x = 0;
+            exit.x = menu.width - exit.width;
         }
 
         if (menuSlideIn) {
@@ -93,8 +91,30 @@ Gameplay.prototype.slideMenu = function(isDirection) {
         }
 
         menu.x = nextMenuPosition;
+        exit.x = nextExitPosition;
     });
 
     menuSlideTicker.speed = 20;
     menuSlideTicker.start();
+};
+
+Gameplay.prototype.drawClose = function() {
+    const app = this._app;
+    const self = this;
+
+    const exit = new PIXI.Sprite.fromImage('images/interface/close.png');
+    exit.width = 100;
+    exit.height = 100;
+    setScale(exit);
+    exit.x = -exit.width;
+    exit.y = 0;
+    exit.interactive = true;
+
+    app.stage.addChild(exit);
+
+    this._exit = exit;
+
+    exit.on("click", function() {
+        self.slideMenu(false);
+    });
 };
