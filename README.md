@@ -1,4 +1,4 @@
-1) Install npm
+1) Install npm packages
 2) Install gulp
 3) Install http-server
 4) Run cmd and execute next command:
