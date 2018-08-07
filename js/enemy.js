@@ -19,10 +19,10 @@ const Enemy = function(game) {
 };
 
 Enemy.prototype._moveEnemy = function() {
-    const enemy = this._enemy,
-        app = this._app,
-        player = this._game._player,
-        game = this._game;
+    const enemy = this._enemy;
+    const app = this._app;
+    const player = this._game._player;
+    const game = this._game;
 
     const ticker = new window.PIXI.ticker.Ticker();
     const stepX = (WIDTH / 2 - enemy.x) / 100;
@@ -53,6 +53,14 @@ Enemy.prototype._moveEnemy = function() {
     });
     this._ticker = ticker;
     ticker.start();
+};
+
+Enemy.prototype.stopEnemy = function() {
+    this._ticker.stop();
+};
+
+Enemy.prototype.startEnemy = function() {
+    this._ticker.start();
 };
 
 Enemy.prototype.destroy = function() {

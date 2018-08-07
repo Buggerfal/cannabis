@@ -52,6 +52,14 @@ Shot.prototype._moveShot = function(x, y) {
     ticker.start();
 };
 
+Shot.prototype.stopShot = function() {
+    this._ticker.stop();
+};
+
+Shot.prototype.startShot = function() {
+    this._ticker.start();
+};
+
 Shot.prototype._checkСollision = function() {
     let allEnemies = this._game._allEnemies;
 

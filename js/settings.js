@@ -49,19 +49,17 @@ Gameplay.prototype.drawMenu = function() {
     this.menu = gameplayMenu;
 };
 
-Gameplay.prototype._isMenuAnimationProgress = false;
+Gameplay.prototype._isMenuAnimationInProgress = false;
 
 Gameplay.prototype.slideMenu = function(isDirection) {
-    const self = this;
-    const menu = self.menu;
-    const exit = self._exit;
+    const menu = this.menu;
+    const exit = this._exit;
 
-
-    if (self._isMenuAnimationProgress) {
+    if (this._isMenuAnimationInProgress) {
         return;
     }
 
-    self._isMenuAnimationProgress = true;
+    this._isMenuAnimationInProgress = true;
 
     const menuSlideTicker = new window.PIXI.ticker.Ticker();
 
@@ -84,7 +82,7 @@ Gameplay.prototype.slideMenu = function(isDirection) {
         }
 
         if (menuSlideOut || menuSlideIn) {
-            self._isMenuAnimationProgress = false;
+            this._isMenuAnimationInProgress = false;
             menuSlideTicker.stop();
             menuSlideTicker.destroy();
             return;
