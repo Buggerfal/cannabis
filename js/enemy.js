@@ -2,17 +2,8 @@ const Enemy = function(game) {
     this._game = game;
     this._app = game.app;
 
-    const enemy = new PIXI.Sprite.fromImage('images/enemy/' + randomInteger(1, 4) + '.png');
     const positionRnd = randomEnemyPosition();
-    enemy.anchor.set(0.5);
-    enemy.width = 100;
-    enemy.height = 100;
-    enemy.x = positionRnd.x;
-    enemy.y = positionRnd.y;
-    setScale(enemy);
-    enemy.interactive = false;
-
-    this._app.stage.addChild(enemy);
+    const enemy = createSprite(this._app, positionRnd.x, positionRnd.y, 100, 100, 'images/enemy/' + randomInteger(1, 4) + '.png', false);
 
     this._enemy = enemy;
     this._moveEnemy();

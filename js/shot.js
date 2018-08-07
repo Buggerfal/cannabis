@@ -6,17 +6,7 @@ let Shot = function(x, y, game) {
 };
 
 Shot.prototype._drawShot = function(x, y) {
-    let shot = PIXI.Sprite.fromImage('images/shot.png');
-
-    shot.anchor.set(0.5);
-    shot.width = 25;
-    shot.height = 25;
-    shot.x = WIDTH / 2;
-    shot.y = HEIGHT / 2;
-    shot.interactive = false;
-    setScale(shot);
-
-    this._app.stage.addChild(shot);
+    const shot = createSprite(this._app, WIDTH / 2, HEIGHT / 2, 25, 25, 'images/shot.png', false);
 
     this._shot = shot;
     this._moveShot(x, y);

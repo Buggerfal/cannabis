@@ -78,6 +78,20 @@ const playSound = function(name) {
     sound.play();
 };
 
+const createSprite = function(app, x, y, width, height, path, interactive) {
+    const sprite = PIXI.Sprite.fromImage(path);
+
+    sprite.anchor.set(0.5);
+    sprite.width = width;
+    sprite.height = height;
+    sprite.x = x;
+    sprite.y = y;
+    sprite.interactive = interactive;
+    setScale(sprite);
+
+    return app.stage.addChild(sprite);
+};
+
 function randomEnemyPosition() {
     const randomSide = randomInteger(0, 3);
 

@@ -12,16 +12,7 @@ Gameplay.prototype._drawIcon = function(position) {
         game = this._game,
         self = this;
 
-    const icon = new PIXI.Sprite.fromImage('images/interface/settings.png');
-    icon.x = position.x;
-    icon.y = position.y;
-    icon.width = 128;
-    icon.height = 128;
-    setScale(icon);
-    icon.interactive = true;
-
-    app.stage.addChild(icon);
-
+    const icon = createSprite(app, position.x, position.y, 128, 128, 'images/interface/settings.png', true);
     this._icon = icon;
 
     icon.on('click', function() {

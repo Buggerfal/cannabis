@@ -25,17 +25,8 @@ let Game = function() {
 Game.prototype.buttonPlay = function(x, y) {
     const gameplay = new Gameplay(this);
     const self = this;
-    const buttonStart = PIXI.Sprite.fromImage('images/interface/button-play.png');
 
-    buttonStart.anchor.set(0.5);
-    buttonStart.width = 200;
-    buttonStart.height = 200;
-    buttonStart.x = x;
-    buttonStart.y = y;
-    buttonStart.interactive = true;
-    setScale(buttonStart);
-
-    this.app.stage.addChild(buttonStart);
+    const buttonStart = createSprite(this.app, x, y, 200, 200, 'images/interface/button-play.png', true);
 
     buttonStart.on("click", function() {
         self.app.stage.removeChild(buttonStart);
@@ -107,16 +98,7 @@ Game.prototype.initApp = function() {
 };
 
 Game.prototype.drawAim = function(x, y) {
-    let aim = PIXI.Sprite.fromImage('images/aim.png');
-
-    aim.anchor.set(0.5);
-    aim.width = 128;
-    aim.height = 128;
-    aim.x = x;
-    aim.y = y;
-    aim.interactive = false;
-
-    this.app.stage.addChild(aim);
+    const aim = createSprite(this.app, x, y, 128, 128, 'images/aim.png', false);
     this._aim = aim;
 }
 
@@ -201,21 +183,13 @@ Game.prototype.decreaseScore = function() {
 
 Game.prototype.createHeart = function() {
     this._scoreHearts = [];
-    const xAndY = percentages(80, 7);
+    const xAndY = percentages(65, 7);
     let stepX = xAndY.x;
     for (let i = 0; i <= 2; i++) {
-        const heart = new PIXI.Sprite.fromImage('images/interface/heart-live.png');
+        const heart = createSprite(this.app, stepX, xAndY.y, 100, 100, 'images/interface/heart-live.png', false);
 
-        heart.anchor.set(0.5);
-        heart.width = 100;
-        heart.height = 100;
-        //width heart + widt heart / 2
-        heart.x += stepX;
-        heart.y = xAndY.y;
-        setScale(heart);
         stepX += heart.width + heart.width / 6;
 
-        this.app.stage.addChild(heart);
         this._scoreHearts.push(heart);
     };
 };
