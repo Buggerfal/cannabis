@@ -16,6 +16,7 @@ let Game = function() {
     this._allEnemies = [];
     this._intervalEnemy;
     this._intervalSuperPower;
+    this._superAimCount = 0;
 
     this.initApp();
     this.buttonPlay(WIDTH / 2, HEIGHT / 2);
@@ -219,14 +220,47 @@ Game.prototype.createHeart = function() {
     };
 };
 
+//CONTROL SUPER POWER
+/*
+this._superScore - unstoped shot
+this._superAimCount - auto aim
+*/
+
 Game.prototype.hitEnemy = function() {
     this._score += 100;
     this._superScore += 100;
+    this._superAimCount += 1;
 
     if (this._superScore === 1000) {
         this.superPower();
         this._superScore = 0;
     }
+
+    if (this._superAimCount === 5) {
+        this.superAim();
+        this._superAimCount = 0;
+    }
+};
+
+Game.prototype.superAim = function() {
+    let allEnemies = this._allEnemies;
+
+    const superKill = setInterval(function() {
+        allEnemies.forEach((en) => {
+            document.dispatchEvent(new MouseEvent('click', {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+                clientX: en._enemy.x,
+                clientY: en._enemy.y
+            }));
+        })
+
+    }, 300);
+
+    setTimeout(function() {
+        clearInterval(superKill);
+    }, 7000);
 };
 
 let newGame = new Game();

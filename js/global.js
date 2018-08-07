@@ -114,16 +114,3 @@ function randomEnemyPosition() {
         y: randomInteger(rndPosition.minY, rndPosition.maxY)
     }
 }
-
-// setInterval(function (){
-//     allEnemys.forEach((en) => {
-//          document.dispatchEvent(new MouseEvent('click', {
-//          bubbles: true,
-//          cancelable: true,
-//          view: window,
-//          clientX: en._enemy.x,
-//          clientY: en._enemy.y
-//      }));
-//      })
-
-//  }, 100);
