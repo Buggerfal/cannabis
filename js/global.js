@@ -33,7 +33,7 @@ function percentages(percentX, percentY) {
 }
 
 function setScale(element) {
-    const scaleWidth = WIDTH / 1600;
+    const scaleWidth = WIDTH / 1200;
     const scaleHeight = HEIGHT / 800;
     element.width *= scaleHeight;
     element.height *= scaleHeight;
@@ -75,6 +75,7 @@ const explosions = function(app, x, y) {
 const playSound = function(name) {
     const path = `music/${name}`;
     const sound = PIXI.sound.Sound.from(path);
+    // sound.volume = 0.25;
     sound.play();
 };
 

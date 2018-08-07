@@ -17,6 +17,7 @@ Shot.prototype._moveShot = function(x, y) {
     let step = 0;
     const stepX = (x - this._shot.x) / 20;
     const stepY = (this._shot.y - y) / 20;
+    playSound('shot.mp3');
 
     ticker.stop();
     ticker.add(() => {

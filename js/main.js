@@ -23,14 +23,15 @@ let Game = function() {
 };
 
 Game.prototype.buttonPlay = function(x, y) {
-    const gameplay = new Gameplay(this);
+    //TODO settings
+    // const gameplay = new Gameplay(this);
     const self = this;
 
     const buttonStart = createSprite(this.app, x, y, 200, 200, 'images/interface/button-play.png', true);
 
     buttonStart.on("click", function() {
         self.app.stage.removeChild(buttonStart);
-        gameplay.destroyIcon();
+        // gameplay.destroyIcon();
 
         self.addPlayer(WIDTH / 2, HEIGHT / 2);
         self.drawAim(WIDTH / 2, HEIGHT / 2);
@@ -207,12 +208,12 @@ Game.prototype.hitEnemy = function() {
     this._superScore += 100;
     this._superAimCount += 1;
 
-    if (this._superScore === 1000) {
+    if (this._superScore === 5000) {
         this.superPower();
         this._superScore = 0;
     }
 
-    if (this._superAimCount === 5) {
+    if (this._superAimCount === 30) {
         this.superAim();
         this._superAimCount = 0;
     }

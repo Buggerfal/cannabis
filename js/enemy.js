@@ -24,6 +24,7 @@ Enemy.prototype._moveEnemy = function() {
         const isCollide = getIsCollide(player, this);
 
         if (isCollide) {
+            playSound('death.mp3');
             this._game.decreaseScore();
 
             game._allEnemies = game._allEnemies.filter((element, index) => {
