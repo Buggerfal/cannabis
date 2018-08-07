@@ -31,6 +31,8 @@ Gameplay.prototype._drawIcon = function(position) {
 
 Gameplay.prototype.destroyIcon = function() {
     this._icon.destroy();
+    this.menu.destroy();
+    this._exit.destroy();
 };
 
 Gameplay.prototype.drawMenu = function() {

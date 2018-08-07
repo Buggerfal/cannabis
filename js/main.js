@@ -228,43 +228,5 @@ Game.prototype.hitEnemy = function() {
         this._superScore = 0;
     }
 };
-//---------------GAME END------------------//
-
-function randomEnemyPosition() {
-    const randomSide = randomInteger(0, 3);
-
-    position = [{
-            minX: 0,
-            maxX: WIDTH,
-            minY: 0,
-            maxY: 0
-        },
-        {
-            minX: 0,
-            maxX: WIDTH,
-            minY: HEIGHT,
-            maxY: HEIGHT
-        },
-        {
-            minX: 0,
-            maxX: 0,
-            minY: 0,
-            maxY: HEIGHT
-        },
-        {
-            minX: WIDTH,
-            maxX: WIDTH,
-            minY: 0,
-            maxY: HEIGHT
-        },
-    ];
-
-    const rndPosition = position[randomSide];
-
-    return {
-        x: randomInteger(rndPosition.minX, rndPosition.maxX),
-        y: randomInteger(rndPosition.minY, rndPosition.maxY)
-    }
-}
 
 let newGame = new Game();
