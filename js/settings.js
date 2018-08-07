@@ -2,7 +2,7 @@ let Gameplay = function(game) {
     this._game = game;
     this._app = game.app;
     this.menu;
-    this._drawIcon(percentages(3, 3));
+    this._drawIcon(percentages(5, 8));
     this.drawMenu();
     this.drawClose();
 };

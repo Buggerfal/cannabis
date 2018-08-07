@@ -126,9 +126,11 @@ Game.prototype._endGame = function() {
     this._allEnemies.forEach(function(el) {
         el.destroy();
     });
+
     this._player.destroy();
     this._aim.destroy();
     this.showInfo();
+    this.restartGame();
 };
 
 Game.prototype.showInfo = function() {
@@ -235,6 +237,17 @@ Game.prototype.superAim = function() {
     setTimeout(function() {
         clearInterval(superKill);
     }, 7000);
+};
+
+Game.prototype.restartGame = function() {
+    const self = this;
+    const restart = createSprite(this.app, WIDTH / 2, HEIGHT / 3, 200, 200, 'images/interface/restart.png', true);
+
+    //TODO - delete eventListenner All
+    restart.on('click', function() {
+        document.body.removeChild(self.app.view);
+        let game = new Game();
+    });
 };
 
 let newGame = new Game();
