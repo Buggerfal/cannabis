@@ -8,4 +8,4 @@
 
 
 
-http://cannabis.herokuapp.com/
+http://cannabis-game.herokuapp.com/
