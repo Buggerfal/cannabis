@@ -25,47 +25,50 @@ let Game = function() {
 Game.prototype.buttonPlay = function(x, y) {
     //TODO settings
     // const gameplay = new Gameplay(this);
-    const self = this;
-
     const buttonStart = createSprite(this.app, x, y, 200, 200, 'images/interface/button-play.png', true);
 
-    buttonStart.on("click", function() {
-        self.app.stage.removeChild(buttonStart);
+    buttonStart.on("click", () => {
+        this.app.stage.removeChild(buttonStart);
         // gameplay.destroyIcon();
 
-        self.addPlayer(WIDTH / 2, HEIGHT / 2);
-        self.drawAim(WIDTH / 2, HEIGHT / 2);
-        self.playerScore();
-        self.createHeart();
+        this.addPlayer(WIDTH / 2, HEIGHT / 2);
+        this.drawAim(WIDTH / 2, HEIGHT / 2);
+        this.playerScore();
+        this.createHeart();
         initAnimation();
-        self._intervalEnemy = setInterval(function() {
-            const enemy = randomInteger(0, 1) ? new EnemySlow(self) : new EnemyFast(self);
-            self._allEnemies.push(enemy);
+        this._intervalEnemy = setInterval(() => {
+            const enemy = randomInteger(0, 1) ? new Enemy(this) : new Enemy(this);
+            this._allEnemies.push(enemy);
         }, 1500);
 
-        document.addEventListener('mousemove', function(event) {
-            const playerCenter = {
-                x: self._player.x,
-                y: self._player.y
-            };
-
-            const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
-
-            self.rotatePlayer(angle);
-            self._aim.x = event.clientX;
-            self._aim.y = event.clientY;
-        });
+        this._onMouseMove = this._onMouseMove.bind(this);
+        this._playerShot = this._playerShot.bind(this);
 
 
         setTimeout(() => {
-            document.addEventListener('click', function(event) {
-                let newShot = new Shot(event.clientX, event.clientY, self);
-            });
-
+            document.addEventListener('mousemove', this._onMouseMove);
+            document.addEventListener('click', this._playerShot);
         }, 0);
-
     });
 };
+
+Game.prototype._playerShot = function(event) {
+    let newShot = new Shot(event.clientX, event.clientY, this);
+};
+
+Game.prototype._onMouseMove = function(event) {
+    const self = this;
+    const playerCenter = {
+        x: self._player.x,
+        y: self._player.y
+    };
+
+    const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
+
+    self.rotatePlayer(angle);
+    self._aim.x = event.clientX;
+    self._aim.y = event.clientY;
+}
 
 Game.prototype.superPower = function() {
     const self = this;
@@ -123,6 +126,8 @@ Game.prototype.rotatePlayer = function(deg) {
 };
 
 Game.prototype._endGame = function() {
+    document.removeEventListener('mousemove', this._onMouseMove);
+    document.removeEventListener('click', this._playerShot);
     this.stopInterval();
     this._allEnemies.forEach(function(el) {
         el.destroy();

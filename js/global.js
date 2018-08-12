@@ -89,8 +89,9 @@ const createSprite = function(app, x, y, width, height, path, interactive) {
     sprite.y = y;
     sprite.interactive = interactive;
     setScale(sprite);
+    app.stage.addChild(sprite);
 
-    return app.stage.addChild(sprite);
+    return sprite;
 };
 
 function randomEnemyPosition() {
