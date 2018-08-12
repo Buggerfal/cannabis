@@ -12,10 +12,16 @@ Gameplay.prototype._drawIcon = function(position) {
         game = this._game,
         self = this;
 
-    const icon = createSprite(app, position.x, position.y, 128, 128, 'images/interface/settings.png', true);
-    this._icon = icon;
+    this._icon = createSprite(app, {
+        x: position.x,
+        y: position.y,
+        width: 128,
+        height: 128,
+        path: 'images/interface/settings.png',
+        interactive: true
+    });
 
-    icon.on('click', function() {
+    this._icon.on('click', function() {
         self.slideMenu(true);
     });
 };

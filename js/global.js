@@ -15,11 +15,17 @@ function getIsCollide(player, enemy) {
     let XColl = false;
     let YColl = false;
 
-    if ((player.x + player.width / 2 >= enemy.x) && (player.x <= enemy.x + enemy.width / 2)) XColl = true;
-    if ((player.y + player.height / 2 >= enemy.y) && (player.y <= enemy.y + enemy.height / 2)) YColl = true;
-    if (XColl & YColl) { return true; }
+    if (player.x + player.width / 2 >= enemy.x &&
+        player.x <= enemy.x + enemy.width / 2) {
+        XColl = true;
+    }
 
-    return false;
+    if (player.y + player.height / 2 >= enemy.y &&
+        player.y <= enemy.y + enemy.height / 2) {
+        YColl = true;
+    }
+
+    return XColl && YColl;
 }
 
 function generatedId() {
@@ -79,16 +85,25 @@ const playSound = function(name) {
     sound.play();
 };
 
-const createSprite = function(app, x, y, width, height, path, interactive) {
-    const sprite = PIXI.Sprite.fromImage(path);
+const createSprite = function(app, options) {
+    options = Object.assign({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        interactive: false
+    }, options);
+
+    const sprite = PIXI.Sprite.fromImage(options.path);
 
     sprite.anchor.set(0.5);
-    sprite.width = width;
-    sprite.height = height;
-    sprite.x = x;
-    sprite.y = y;
-    sprite.interactive = interactive;
+    sprite.width = options.width;
+    sprite.height = options.height;
+    sprite.x = options.x;
+    sprite.y = options.y;
+    sprite.interactive = options.interactive;
     setScale(sprite);
+
     app.stage.addChild(sprite);
 
     return sprite;

@@ -25,7 +25,14 @@ let Game = function() {
 Game.prototype.buttonPlay = function(x, y) {
     //TODO settings
     // const gameplay = new Gameplay(this);
-    const buttonStart = createSprite(this.app, x, y, 200, 200, 'images/interface/button-play.png', true);
+    const buttonStart = createSprite(this.app, {
+        x: x,
+        y: y,
+        width: 200,
+        height: 200,
+        path: 'images/interface/button-play.png',
+        interactive: true
+    });
 
     buttonStart.on("click", () => {
         this.app.stage.removeChild(buttonStart);
@@ -43,7 +50,6 @@ Game.prototype.buttonPlay = function(x, y) {
 
         this._onMouseMove = this._onMouseMove.bind(this);
         this._playerShot = this._playerShot.bind(this);
-
 
         setTimeout(() => {
             document.addEventListener('mousemove', this._onMouseMove);
@@ -102,8 +108,14 @@ Game.prototype.initApp = function() {
 };
 
 Game.prototype.drawAim = function(x, y) {
-    const aim = createSprite(this.app, x, y, 128, 128, 'images/aim.png', false);
-    this._aim = aim;
+    this._aim = createSprite(this.app, {
+        x: x,
+        y: y,
+        width: 128,
+        height: 128,
+        path: 'images/aim.png',
+        interactive: false
+    });
 }
 
 Game.prototype.addPlayer = function(x, y) {
@@ -194,7 +206,15 @@ Game.prototype.createHeart = function() {
     const xAndY = percentages(65, 7);
     let stepX = xAndY.x;
     for (let i = 0; i <= 2; i++) {
-        const heart = createSprite(this.app, stepX, xAndY.y, 100, 100, 'images/interface/heart-live.png', false);
+
+        const heart = createSprite(this.app, {
+            x: stepX,
+            y: xAndY.y,
+            width: 100,
+            height: 100,
+            path: 'images/interface/heart-live.png',
+            interactive: false
+        });
 
         stepX += heart.width + heart.width / 6;
 
@@ -207,7 +227,6 @@ Game.prototype.createHeart = function() {
 this._superScore - unstoped shot
 this._superAimCount - auto aim
 */
-
 Game.prototype.hitEnemy = function() {
     this._score += 100;
     this._superScore += 100;
@@ -247,7 +266,14 @@ Game.prototype.superAim = function() {
 
 Game.prototype.restartGame = function() {
     const self = this;
-    const restart = createSprite(this.app, WIDTH / 2, HEIGHT / 3, 200, 200, 'images/interface/restart.png', true);
+    const restart = createSprite(this.app, {
+        x: WIDTH / 2,
+        y: HEIGHT / 3,
+        width: 200,
+        height: 200,
+        path: 'images/interface/restart.png',
+        interactive: true
+    });
 
     //TODO - delete eventListenner All
     restart.on('click', function() {

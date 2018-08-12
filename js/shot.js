@@ -6,7 +6,14 @@ let Shot = function(x, y, game) {
 };
 
 Shot.prototype._drawShot = function(x, y) {
-    const shot = createSprite(this._app, WIDTH / 2, HEIGHT / 2, 25, 25, 'images/shot.png', false);
+    const shot = createSprite(this._app, {
+        x: WIDTH / 2,
+        y: HEIGHT / 2,
+        width: 25,
+        height: 25,
+        path: 'images/shot.png',
+        interactive: false
+    });
 
     this._shot = shot;
     this._moveShot(x, y);

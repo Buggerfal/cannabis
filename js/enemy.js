@@ -5,9 +5,16 @@ class Enemy {
         this._speed = speed || 100;
 
         const positionRnd = randomEnemyPosition();
-        const enemy = createSprite(this._app, positionRnd.x, positionRnd.y, 100, 100, 'images/enemy/' + randomInteger(1, 2) + '.png', false);
 
-        this._enemy = enemy;
+        this._enemy = createSprite(this._app, {
+            x: positionRnd.x,
+            y: positionRnd.y,
+            width: 100,
+            height: 100,
+            path: 'images/enemy/' + randomInteger(1, 2) + '.png',
+            interactive: false
+        });
+
         this._moveEnemy();
     }
 
