@@ -228,8 +228,8 @@ Game.prototype.superAim = function() {
                 bubbles: true,
                 cancelable: true,
                 view: window,
-                clientX: en._enemy.x,
-                clientY: en._enemy.y
+                clientX: en.x,
+                clientY: en.y
             }));
         })
 
