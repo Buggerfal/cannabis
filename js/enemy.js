@@ -2,6 +2,7 @@ class Enemy {
     constructor(game) {
         this._game = game;
         this._app = game.app;
+        this.speed = 100;
 
         const positionRnd = randomEnemyPosition();
         const enemy = createSprite(this._app, positionRnd.x, positionRnd.y, 100, 100, 'images/enemy/' + randomInteger(1, 2) + '.png', false);
@@ -17,11 +18,11 @@ class Enemy {
         const game = this._game;
 
         const ticker = new window.PIXI.ticker.Ticker();
-        const stepX = (WIDTH / 2 - enemy.x) / 100;
-        const stepY = (enemy.y - HEIGHT / 2) / 100;
 
         ticker.stop();
         ticker.add(() => {
+            const stepX = (WIDTH / 2 - enemy.x) / this.speed;
+            const stepY = (enemy.y - HEIGHT / 2) / this.speed;
             const isCollide = getIsCollide(player, this);
 
             if (isCollide) {
@@ -46,14 +47,6 @@ class Enemy {
         });
         this._ticker = ticker;
         ticker.start();
-    }
-
-    stopEnemy() {
-        this._ticker.stop();
-    }
-
-    startEnemy() {
-        this._ticker.start();
     }
 
     destroy() {
@@ -70,76 +63,15 @@ class Enemy {
         return this._enemy.y;
     }
 }
-
-class EnemyFast {
+class EnemyFast extends Enemy {
     constructor(game) {
-        this._game = game;
-        this._app = game.app;
-
-        const positionRnd = randomEnemyPosition();
-        const enemy = createSprite(this._app, positionRnd.x, positionRnd.y, 100, 100, 'images/enemy/' + randomInteger(3, 4) + '.png', false);
-
-        this._enemy = enemy;
-        this._moveEnemy();
+        super(game);
+        this.speed = 50;
     }
-
-    _moveEnemy() {
-        const enemy = this._enemy;
-        const app = this._app;
-        const player = this._game._player;
-        const game = this._game;
-
-        const ticker = new window.PIXI.ticker.Ticker();
-        const stepX = (WIDTH / 2 - enemy.x) / 50;
-        const stepY = (enemy.y - HEIGHT / 2) / 50;
-
-        ticker.stop();
-        ticker.add(() => {
-            const isCollide = getIsCollide(player, this);
-
-            if (isCollide) {
-                playSound('death.mp3');
-                this._game.decreaseScore();
-
-                game._allEnemies = game._allEnemies.filter((element, index) => {
-                    return element != this;
-                });
-
-                new explosions(app, enemy.x, enemy.y)
-
-                enemy.destroy();
-                ticker.stop();
-                ticker.destroy();
-
-                return;
-            }
-
-            enemy.x += stepX;
-            enemy.y -= stepY;
-        });
-        this._ticker = ticker;
-        ticker.start();
-    }
-
-    stopEnemy() {
-        this._ticker.stop();
-    }
-
-    startEnemy() {
-        this._ticker.start();
-    }
-
-    destroy() {
-        this._ticker.stop();
-        this._ticker.destroy();
-        this._enemy.destroy();
-    }
-
-    get x() {
-        return this._enemy.x;
-    }
-
-    get y() {
-        return this._enemy.y;
+}
+class EnemySlow extends Enemy {
+    constructor(game) {
+        super(game);
+        this.speed = 200;
     }
 }
