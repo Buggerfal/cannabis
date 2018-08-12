@@ -1,21 +1,19 @@
 let Shot = function(x, y, game) {
     this._game = game;
     this._app = game.app;
-    this._drawShot(x, y);
+    this._drawShot();
+    this._moveShot(x, y);
     this._coordinatesShot = [{ x: 0, y: 0 }];
 };
 
-Shot.prototype._drawShot = function(x, y) {
-    const shot = createSprite(this._app, {
+Shot.prototype._drawShot = function() {
+    this._shot = createSprite(this._app, {
         x: WIDTH / 2,
         y: HEIGHT / 2,
         width: 25,
         height: 25,
         path: 'images/shot.png'
     });
-
-    this._shot = shot;
-    this._moveShot(x, y);
 };
 
 Shot.prototype._moveShot = function(x, y) {

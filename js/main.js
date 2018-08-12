@@ -113,8 +113,7 @@ Game.prototype.drawAim = function(x, y) {
         y: y,
         width: 128,
         height: 128,
-        path: 'images/aim.png',
-        interactive: false
+        path: 'images/aim.png'
     });
 }
 
@@ -207,8 +206,7 @@ Game.prototype.createHeart = function() {
             y: xAndY.y,
             width: 100,
             height: 100,
-            path: 'images/interface/heart-live.png',
-            interactive: false
+            path: 'images/interface/heart-live.png'
         });
 
         stepX += heart.width + heart.width / 6;

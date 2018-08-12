@@ -11,8 +11,7 @@ class Enemy {
             y: positionRnd.y,
             width: 100,
             height: 100,
-            path: 'images/enemy/' + randomInteger(1, 2) + '.png',
-            interactive: false
+            path: 'images/enemy/' + randomInteger(1, 2) + '.png'
         });
 
         this._moveEnemy();
