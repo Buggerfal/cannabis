@@ -119,18 +119,13 @@ Game.prototype.drawAim = function(x, y) {
 }
 
 Game.prototype.addPlayer = function(x, y) {
-    const player = PIXI.Sprite.fromImage('images/player.png');
-
-    player.anchor.set(0.5);
-    player.width = 140;
-    player.height = 95;
-    player.x = x;
-    player.y = y;
-    setScale(player);
-
-    this.app.stage.addChild(player);
-
-    this._player = player;
+    this._player = createSprite(this.app, {
+        path: 'images/player.png',
+        x: x,
+        y: y,
+        width: 140,
+        height: 95
+    });
 };
 
 Game.prototype.rotatePlayer = function(deg) {

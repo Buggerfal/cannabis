@@ -11,8 +11,7 @@ Shot.prototype._drawShot = function(x, y) {
         y: HEIGHT / 2,
         width: 25,
         height: 25,
-        path: 'images/shot.png',
-        interactive: false
+        path: 'images/shot.png'
     });
 
     this._shot = shot;

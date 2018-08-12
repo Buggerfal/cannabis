@@ -102,6 +102,7 @@ const createSprite = function(app, options) {
     sprite.x = options.x;
     sprite.y = options.y;
     sprite.interactive = options.interactive;
+
     setScale(sprite);
 
     app.stage.addChild(sprite);
