@@ -1,8 +1,8 @@
 class Enemy {
-    constructor(game) {
+    constructor(game, speed) {
         this._game = game;
         this._app = game.app;
-        this.speed = 100;
+        this._speed = speed || 100;
 
         const positionRnd = randomEnemyPosition();
         const enemy = createSprite(this._app, positionRnd.x, positionRnd.y, 100, 100, 'images/enemy/' + randomInteger(1, 2) + '.png', false);
@@ -17,12 +17,12 @@ class Enemy {
         const player = this._game._player;
         const game = this._game;
 
+        const stepX = (WIDTH / 2 - enemy.x) / this._speed;
+        const stepY = (enemy.y - HEIGHT / 2) / this._speed;
         const ticker = new window.PIXI.ticker.Ticker();
 
         ticker.stop();
         ticker.add(() => {
-            const stepX = (WIDTH / 2 - enemy.x) / this.speed;
-            const stepY = (enemy.y - HEIGHT / 2) / this.speed;
             const isCollide = getIsCollide(player, this);
 
             if (isCollide) {
@@ -65,13 +65,11 @@ class Enemy {
 }
 class EnemyFast extends Enemy {
     constructor(game) {
-        super(game);
-        this.speed = 50;
+        super(game, 50);
     }
 }
 class EnemySlow extends Enemy {
     constructor(game) {
-        super(game);
-        this.speed = 200;
+        super(game, 200);
     }
 }
