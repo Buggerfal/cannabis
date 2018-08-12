@@ -35,9 +35,7 @@ class Enemy {
 
                 new explosions(app, enemy.x, enemy.y)
 
-                enemy.destroy();
-                ticker.stop();
-                ticker.destroy();
+                this.destroy();
 
                 return;
             }
