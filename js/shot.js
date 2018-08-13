@@ -41,9 +41,7 @@ Shot.prototype._moveShot = function(x, y) {
 
         this._checkСollision(ticker);
     });
-
     this._ticker = ticker;
-
     ticker.start();
 };
 
@@ -79,3 +77,9 @@ Shot.prototype._checkСollision = function() {
     }
 
 };
+
+/*
+Базовый клас для
+Дестрой - удаляет спрайт и тикер
+КрейтСпрайт (глобальный)
+*/
