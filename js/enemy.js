@@ -1,22 +1,22 @@
 class Enemy {
     constructor(game, speed) {
-        this._game = game;
-        this._app = game.app;
-        this._speed = speed || 100;
+            this._game = game;
+            this._app = game.app;
+            this._speed = speed || 100;
 
-        const positionRnd = randomEnemyPosition();
+            const positionRnd = randomEnemyPosition();
 
-        this._enemy = createSprite(this._app, {
-            x: positionRnd.x,
-            y: positionRnd.y,
-            width: 100,
-            height: 100,
-            path: 'images/enemy/' + randomInteger(1, 2) + '.png'
-        });
+            this._enemy = createSprite(this._app, {
+                x: positionRnd.x,
+                y: positionRnd.y,
+                width: 100,
+                height: 100,
+                path: 'images/enemy/' + randomInteger(1, 2) + '.png'
+            });
 
-        this._moveEnemy();
-    }
-
+            this._moveEnemy();
+        }
+        //q
     _moveEnemy() {
         const enemy = this._enemy;
         const app = this._app;
