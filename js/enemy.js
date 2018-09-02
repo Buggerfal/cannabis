@@ -1,22 +1,22 @@
 class Enemy {
     constructor(game, speed) {
-            this._game = game;
-            this._app = game.app;
-            this._speed = speed || 100;
+        this._game = game;
+        this._app = game.app;
+        this._speed = speed || 100;
 
-            const positionRnd = randomEnemyPosition();
+        const positionRnd = Enemy.randomEnemyPosition();
 
-            this._enemy = createSprite(this._app, {
-                x: positionRnd.x,
-                y: positionRnd.y,
-                width: 100,
-                height: 100,
-                path: 'images/enemy/' + randomInteger(1, 2) + '.png'
-            });
+        this._enemy = createSprite(this._app, {
+            x: positionRnd.x,
+            y: positionRnd.y,
+            width: 100,
+            height: 100,
+            path: 'images/enemy/' + randomInteger(1, 2) + '.png'
+        });
 
-            this._moveEnemy();
-        }
-        //q
+        this._moveEnemy();
+    }
+
     _moveEnemy() {
         const enemy = this._enemy;
         const app = this._app;
@@ -65,6 +65,43 @@ class Enemy {
 
     get y() {
         return this._enemy.y;
+    }
+
+    static randomEnemyPosition() {
+        const randomSide = randomInteger(0, 3);
+
+        const position = [{
+                minX: 0,
+                maxX: WIDTH,
+                minY: 0,
+                maxY: 0
+            },
+            {
+                minX: 0,
+                maxX: WIDTH,
+                minY: HEIGHT,
+                maxY: HEIGHT
+            },
+            {
+                minX: 0,
+                maxX: 0,
+                minY: 0,
+                maxY: HEIGHT
+            },
+            {
+                minX: WIDTH,
+                maxX: WIDTH,
+                minY: 0,
+                maxY: HEIGHT
+            },
+        ];
+
+        const rndPosition = position[randomSide];
+
+        return {
+            x: randomInteger(rndPosition.minX, rndPosition.maxX),
+            y: randomInteger(rndPosition.minY, rndPosition.maxY)
+        }
     }
 }
 class EnemyFast extends Enemy {
