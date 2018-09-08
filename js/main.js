@@ -44,7 +44,7 @@ Game.prototype.buttonPlay = function(x, y) {
         this.createHeart();
         initAnimation();
         this._intervalEnemy = setInterval(() => {
-            const enemy = randomInteger(0, 1) ? new EnemyFast(this) : new EnemySlow(this);
+            const enemy = Enemy.getRandomEnemy(this);
             this._allEnemies.push(enemy);
         }, 1500);
 

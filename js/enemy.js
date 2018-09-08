@@ -103,14 +103,40 @@ class Enemy {
             y: randomInteger(rndPosition.minY, rndPosition.maxY)
         }
     }
+
+    static getRandomEnemy(game) {
+        const rand = randomInteger(0, Enemy.enemyInstances.length - 1);
+        return Enemy.enemyInstances[rand](game);
+    }
+    static registerNewEnemy(creator) {
+        Enemy.enemyInstances = Enemy.enemyInstances || [];
+        Enemy.enemyInstances.push(creator);
+    }
+
+
+    //static enemyInstances = []
 }
+
 class EnemyFast extends Enemy {
     constructor(game) {
         super(game, 50);
     }
 }
+
+Enemy.registerNewEnemy(game => new EnemyFast(game));
+
 class EnemySlow extends Enemy {
     constructor(game) {
         super(game, 200);
     }
 }
+
+Enemy.registerNewEnemy(game => new EnemySlow(game));
+
+class EnemySuperSlow extends Enemy {
+    constructor(game) {
+        super(game, 350);
+    }
+}
+
+Enemy.registerNewEnemy(game => new EnemySuperSlow(game));
