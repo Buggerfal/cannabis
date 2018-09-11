@@ -62,32 +62,35 @@ function isOutPosition(sprite) {
     }
 }
 
-const explosions = function(app, x, y) {
-    const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
+class explosions {
+    constructor(app, x, y){
 
-    explosion.x = x;
-    explosion.y = y;
-    explosion.animationSpeed = 0.3;
-    explosion.anchor.set(0.5);
-    explosion.loop = false;
-    app.stage.addChild(explosion);
+        const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
 
-    explosion.play();
+        explosion.x = x;
+        explosion.y = y;
+        explosion.animationSpeed = 0.3;
+        explosion.anchor.set(0.5);
+        explosion.loop = false;
+        app.stage.addChild(explosion);
 
-    explosion.onComplete = () => {
-        explosion.stop();
-        explosion.destroy();
-    };
-};
+        explosion.play();
 
-const playSound = function(name) {
+        explosion.onComplete = () => {
+            explosion.stop();
+            explosion.destroy();
+        };
+    }
+}
+
+const playSound = (name) => {
     const path = `music/${name}`;
     const sound = PIXI.sound.Sound.from(path);
     // sound.volume = 0.25;
     sound.play();
 };
 
-const createSprite = function(app, options) {
+const createSprite = (app, options) => {
     options = Object.assign({
         x: 0,
         y: 0,
