@@ -82,17 +82,17 @@ class Game {
         let x = 0,
             y = 0;
 
-        document.addEventListener('mousemove', function(event) {
+        document.addEventListener('mousemove', (event) => {
             x = event.clientX;
             y = event.clientY;
         });
 
 
-        self._intervalSuperPower = setInterval(function(event) {
+        self._intervalSuperPower = setInterval((event) => {
             let newShot = new Shot(x, y, self);
         }, 100);
 
-        setTimeout(function() {
+        setTimeout(() => {
             clearInterval(self._intervalSuperPower);
         }, 7000);
     }
@@ -136,7 +136,7 @@ class Game {
         document.removeEventListener('mousemove', this._onMouseMove);
         document.removeEventListener('click', this._playerShot);
         this.stopInterval();
-        this._allEnemies.forEach(function(el) {
+        this._allEnemies.forEach((el) => {
             el.destroy();
         });
 
@@ -240,7 +240,7 @@ class Game {
     superAim() {
         let allEnemies = this._allEnemies;
 
-        const superKill = setInterval(function() {
+        const superKill = setInterval(() => {
             allEnemies.forEach((en) => {
                 document.dispatchEvent(new MouseEvent('click', {
                     bubbles: true,
@@ -253,7 +253,7 @@ class Game {
 
         }, 300);
 
-        setTimeout(function() {
+        setTimeout(() => {
             clearInterval(superKill);
         }, 7000);
     }
@@ -270,7 +270,7 @@ class Game {
         });
 
         //TODO - delete eventListenner All
-        restart.on('click', function() {
+        restart.on('click', () => {
             document.body.removeChild(self.app.view);
             let game = new Game();
         });
