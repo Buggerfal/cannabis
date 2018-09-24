@@ -3,7 +3,6 @@ class Enemy {
         this._game = game;
         this._app = game.app;
         this._speed = speed || 100;
-
         const positionRnd = Enemy.randomEnemyPosition();
 
         this._enemy = createSprite(this._app, {
@@ -13,6 +12,8 @@ class Enemy {
             height: 100,
             path: 'images/enemy/' + randomInteger(1, 2) + '.png'
         });
+
+        this._enemy._life = randomInteger(0, 2);
 
         this._moveEnemy();
     }
@@ -140,3 +141,11 @@ class EnemySuperSlow extends Enemy {
 }
 
 Enemy.registerNewEnemy(game => new EnemySuperSlow(game));
+
+class EnemyFourLife extends Enemy {
+    constructor(game) {
+        super(game, 300);
+    }
+}
+
+Enemy.registerNewEnemy(game => new EnemyFourLife(game));

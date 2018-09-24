@@ -24,12 +24,9 @@ function getIsCollide(player, enemy) {
         player.y <= enemy.y + enemy.height / 2) {
         YColl = true;
     }
-
     return XColl && YColl;
 }
 
-//
-//
 function generatedId() {
     return Math.random().toString(36).substr(2, 9);
 }
@@ -63,7 +60,7 @@ function isOutPosition(sprite) {
 }
 
 class explosions {
-    constructor(app, x, y){
+    constructor(app, x, y) {
 
         const explosion = new PIXI.extras.AnimatedSprite(explosionTextures);
 
