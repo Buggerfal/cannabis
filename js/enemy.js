@@ -119,7 +119,7 @@ class Enemy {
 
 class EnemyFast extends Enemy {
     constructor(game) {
-        super(game, 50);
+        super(game, 100);
     }
 }
 
@@ -135,7 +135,7 @@ Enemy.registerNewEnemy(game => new EnemySlow(game));
 
 class EnemySuperSlow extends Enemy {
     constructor(game) {
-        super(game, 350);
+        super(game, 300);
     }
 }
 
