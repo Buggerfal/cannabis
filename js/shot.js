@@ -61,34 +61,27 @@ class Shot {
             var isCollision = getIsCollide(this._shot, allEnemies[i]);
             if (isCollision) {
                 if (allEnemies[i]._enemy._life <= 1) {
-                    new explosions(this._app, this._shot.x, this._shot.y);
-
-                    this._game.hitEnemy();
-
-                    this._ticker.stop();
-                    this._ticker.destroy();
-                    this._shot.destroy();
-                    playSound('explosion.mp3');
-
                     allEnemies[i].destroy();
-
                     allEnemies.splice(i, 1);
-
+                    this._destroy();
                     return;
                 } else {
-                    new explosions(this._app, this._shot.x, this._shot.y);
-
                     allEnemies[i]._enemy._life -= 1;
-                    this._game.hitEnemy();
-
-                    this._ticker.stop();
-                    this._ticker.destroy();
-                    this._shot.destroy();
-                    playSound('explosion.mp3');
+                    this._destroy();
                 }
             }
         }
 
+    }
+
+    _destroy() {
+        new explosions(this._app, this._shot.x, this._shot.y);
+
+        this._game.hitEnemy();
+        this._ticker.stop();
+        this._ticker.destroy();
+        this._shot.destroy();
+        playSound('explosion.mp3');
     }
 }
 
