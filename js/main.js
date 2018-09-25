@@ -39,6 +39,7 @@ class Game {
             this.drawAim(WIDTH / 2, HEIGHT / 2);
             this.playerScore();
             this.createHeart();
+            this.money();
             initAnimation();
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
@@ -178,6 +179,17 @@ class Game {
         this._playerScoreText = playerScoreText;
         this._scoreTicker = ticker;
         ticker.start();
+    }
+
+    money() {
+        const xAndY = percentages(3, 15);
+        const money = createSprite(this.app, {
+            x: xAndY.x,
+            y: xAndY.y,
+            width: 50,
+            height: 50,
+            path: 'images/money.png'
+        });
     }
 
     decreaseScore() {
