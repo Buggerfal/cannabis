@@ -27,10 +27,6 @@ function getIsCollide(player, enemy) {
     return XColl && YColl;
 }
 
-function generatedId() {
-    return Math.random().toString(36).substr(2, 9);
-}
-
 function percentages(percentX, percentY) {
     const toX = (WIDTH / 100) * percentX;
     const toY = (HEIGHT / 100) * percentY;

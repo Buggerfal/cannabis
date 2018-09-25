@@ -23,9 +23,7 @@ class Game {
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
 
-    buttonPlay (x, y) {
-        //TODO settings
-        // const gameplay = new Gameplay(this);
+    buttonPlay(x, y) {
         const buttonStart = createSprite(this.app, {
             x: x,
             y: y,
@@ -37,8 +35,6 @@ class Game {
 
         buttonStart.on("click", () => {
             this.app.stage.removeChild(buttonStart);
-            // gameplay.destroyIcon();
-
             this.addPlayer(WIDTH / 2, HEIGHT / 2);
             this.drawAim(WIDTH / 2, HEIGHT / 2);
             this.playerScore();
@@ -102,7 +98,7 @@ class Game {
         clearInterval(this._intervalSuperPower);
     }
 
-    initApp () {
+    initApp() {
         const self = this;
         self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
         document.body.appendChild(self.app.view);
@@ -162,7 +158,7 @@ class Game {
         this.app.stage.addChild(playerHightScore);
     }
 
-    playerScore () {
+    playerScore() {
         const xAndY = percentages(3, 3);
         const ticker = new window.PIXI.ticker.Ticker();
         let playerScoreText = new PIXI.Text(this._score, styleForAllText);
@@ -221,7 +217,7 @@ class Game {
     this._superScore - unstoped shot
     this._superAimCount - auto aim
     */
-    hitEnemy () {
+    hitEnemy() {
         this._score += 100;
         this._superScore += 100;
         this._superAimCount += 1;
