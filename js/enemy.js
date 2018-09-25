@@ -5,6 +5,7 @@ class Enemy {
         this._speed = speed || 100;
         const positionRnd = Enemy.randomEnemyPosition();
 
+        this._aura = this.drawAura(this._app, positionRnd.x, positionRnd.y);
         this._enemy = createSprite(this._app, {
             x: positionRnd.x,
             y: positionRnd.y,
@@ -12,6 +13,7 @@ class Enemy {
             height: 100,
             path: 'images/enemy/' + randomInteger(1, 2) + '.png'
         });
+
 
         this._moveEnemy();
     }
@@ -21,6 +23,7 @@ class Enemy {
         const app = this._app;
         const player = this._game._player;
         const game = this._game;
+        const aura = this._aura;
 
         const stepX = (WIDTH / 2 - enemy.x) / this._speed;
         const stepY = (enemy.y - HEIGHT / 2) / this._speed;
@@ -47,15 +50,31 @@ class Enemy {
 
             enemy.x += stepX;
             enemy.y -= stepY;
+            aura.x += stepX;
+            aura.y -= stepY;
         });
         this._ticker = ticker;
         ticker.start();
+    }
+
+    drawAura(app, x, y) {
+        const circle = new PIXI.Graphics();
+
+        circle.lineStyle(0);
+        circle.beginFill(0xFFFF0B, 0.5);
+        circle.drawCircle(x, y, 60);
+        circle.endFill();
+
+        app.stage.addChild(circle);
+
+        return circle;
     }
 
     destroy() {
         this._ticker.stop();
         this._ticker.destroy();
         this._enemy.destroy();
+        this._aura.destroy();
     }
 
     get x() {
