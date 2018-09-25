@@ -17,7 +17,7 @@ class Shot {
         });
     }
 
-    _moveShot (x, y) {
+    _moveShot(x, y) {
         const ticker = new window.PIXI.ticker.Ticker();
         let step = 0;
         const stepX = (x - this._shot.x) / 20;
@@ -60,20 +60,32 @@ class Shot {
         for (let i = 0; i < allEnemies.length; i++) {
             var isCollision = getIsCollide(this._shot, allEnemies[i]);
             if (isCollision) {
-                new explosions(this._app, this._shot.x, this._shot.y);
+                if (allEnemies[i]._enemy._life <= 1) {
+                    new explosions(this._app, this._shot.x, this._shot.y);
 
-                this._game.hitEnemy();
+                    this._game.hitEnemy();
 
-                this._ticker.stop();
-                this._ticker.destroy();
-                this._shot.destroy();
-                playSound('explosion.mp3');
+                    this._ticker.stop();
+                    this._ticker.destroy();
+                    this._shot.destroy();
+                    playSound('explosion.mp3');
 
-                allEnemies[i].destroy();
+                    allEnemies[i].destroy();
 
-                allEnemies.splice(i, 1);
+                    allEnemies.splice(i, 1);
 
-                return;
+                    return;
+                } else {
+                    new explosions(this._app, this._shot.x, this._shot.y);
+
+                    allEnemies[i]._enemy._life -= 1;
+                    this._game.hitEnemy();
+
+                    this._ticker.stop();
+                    this._ticker.destroy();
+                    this._shot.destroy();
+                    playSound('explosion.mp3');
+                }
             }
         }
 
