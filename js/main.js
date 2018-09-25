@@ -13,11 +13,10 @@ const styleForAllText = new window.PIXI.TextStyle({
 class Game {
     constructor(game, speed) {
         this._score = 0;
-        this._superScore = 0;
+        this._moneyForShot = 0;
         this._allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
-        this._superAimCount = 0;
 
         this.initApp();
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
@@ -52,6 +51,21 @@ class Game {
             setTimeout(() => {
                 document.addEventListener('mousemove', this._onMouseMove);
                 document.addEventListener('click', this._playerShot);
+                document.addEventListener("keydown", (e) => {
+                    switch (e.keyCode) {
+                        case 81:
+                            this.superPower();
+                            break;
+
+                        case 87:
+                            this.superAim();
+                            break;
+
+                        case 69:
+                            alert("The 'c' key is pressed.");
+                            break;
+                    }
+                });
             }, 0);
         });
     }
@@ -75,6 +89,10 @@ class Game {
     }
 
     superPower() {
+        if (this._moneyForShot < 30) return;
+
+        this._moneyForShot -= 30;
+
         const self = this;
         let x = 0,
             y = 0;
@@ -183,6 +201,9 @@ class Game {
 
     money() {
         const xAndY = percentages(3, 15);
+        const ticker = new window.PIXI.ticker.Ticker();
+        let moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+
         const money = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
@@ -190,6 +211,21 @@ class Game {
             height: 50,
             path: 'images/money.png'
         });
+
+        ticker.stop();
+        ticker.add(() => {
+            this.app.stage.removeChild(moneyShot);
+            moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+
+            moneyShot.x = xAndY.x;
+            moneyShot.y = xAndY.y + money.height;
+            moneyShot.anchor.set(0.5);
+
+            this.app.stage.addChild(moneyShot);
+        });
+        this._moneyShot = this.moneyShot;
+        ticker.start();
+
     }
 
     decreaseScore() {
@@ -224,28 +260,15 @@ class Game {
         };
     }
 
-    //CONTROL SUPER POWER
-    /*
-    this._superScore - unstoped shot
-    this._superAimCount - auto aim
-    */
     hitEnemy() {
         this._score += 100;
-        this._superScore += 100;
-        this._superAimCount += 1;
-
-        if (this._superScore === 5000) {
-            this.superPower();
-            this._superScore = 0;
-        }
-
-        if (this._superAimCount === 30) {
-            this.superAim();
-            this._superAimCount = 0;
-        }
+        this._moneyForShot += 1;
     }
 
     superAim() {
+        if (this._moneyForShot < 20) return;
+
+        this._moneyForShot -= 20;
         let allEnemies = this._allEnemies;
 
         const superKill = setInterval(() => {
@@ -283,7 +306,6 @@ class Game {
             let game = new Game();
         });
     }
-
 }
 
 let newGame = new Game();
