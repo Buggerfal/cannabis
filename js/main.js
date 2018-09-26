@@ -17,7 +17,8 @@ class Game {
         this.allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
-
+        this._checkAutoAim = false;
+        this._checkBurstShooting = false;
         this.initApp();
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
@@ -54,11 +55,11 @@ class Game {
                 document.addEventListener("keydown", (e) => {
                     switch (e.keyCode) {
                         case 81:
-                            this.superPower();
+                            this.BurstShooting();
                             break;
 
                         case 87:
-                            this.superAim();
+                            this.autoAim();
                             break;
 
                         case 69:
@@ -88,7 +89,7 @@ class Game {
         self._aim.y = event.clientY;
     }
 
-    superPower() {
+    BurstShooting() {
         if (this._moneyForShot < 30) return;
 
         this._moneyForShot -= 30;
@@ -265,7 +266,7 @@ class Game {
         this._moneyForShot += 1;
     }
 
-    superAim() {
+    autoAim() {
         if (this._moneyForShot < 20) return;
 
         this._moneyForShot -= 20;
