@@ -19,6 +19,7 @@ class Game {
         this._intervalSuperPower;
         this._checkAutoAim = false;
         this._checkBurstShooting = false;
+        this._playerLevel = 0;
         this.initApp();
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
@@ -40,7 +41,9 @@ class Game {
             this.playerScore();
             this.createHeart();
             this.money();
+            this._drawPlayerLevel();
             explosions.initAnimation();
+
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
                 this.allEnemies.push(enemy);
@@ -57,18 +60,31 @@ class Game {
                         case 81:
                             this.BurstShooting();
                             break;
-
                         case 87:
                             this.autoAim();
-                            break;
-
-                        case 69:
-                            alert("The 'c' key is pressed.");
                             break;
                     }
                 });
             }, 0);
         });
+    }
+
+    _drawPlayerLevel() {
+        this.app._playerLvl = this._playerLevel;
+        const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
+        const xAndY = percentages(94, 3);
+
+        playerLvl.x = xAndY.x;
+        playerLvl.y = xAndY.y;
+        playerLvl.anchor.set(0.5);
+        setScale(playerLvl);
+
+        this.app.stage.addChild(playerLvl);
+        this._textLvl = playerLvl;
+    }
+
+    _destroyLvl() {
+        this._textLvl.destroy();
     }
 
     _playerShot(event) {
@@ -144,6 +160,17 @@ class Game {
     hitEnemy() {
         this._score += 100;
         this._moneyForShot += 1;
+        let checkLvlScore = playerLevel.filter((el, index) => {
+            if (el.score === this._score) {
+                return el.level;
+            }
+            return;
+        });
+        if (checkLvlScore.length > 0) {
+            this._playerLevel = checkLvlScore[0].level;
+            this._destroyLvl();
+            this._drawPlayerLevel();
+        }
     }
 
     stopInterval() {
@@ -319,6 +346,5 @@ let newGame = new Game();
 // Создать Инструкцию
 // get для жизней, очей и баксов
 // Utils create
-// initAnimation to explosion
 // Merge branch
 // Все функции и методы на процентах

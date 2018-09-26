@@ -1,4 +1,14 @@
 let explosionTextures = [];
+const playerLevel = [
+    { score: 1000, level: 1 },
+    { score: 2000, level: 2 },
+    { score: 3000, level: 3 },
+    { score: 20000, level: 4 },
+    { score: 25000, level: 5 },
+    { score: 30000, level: 6 },
+    { score: 35000, level: 7 },
+    { score: 40000, level: 8 }
+];
 
 function inRad(num) {
     return num * Math.PI / 180;
