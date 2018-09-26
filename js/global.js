@@ -40,13 +40,6 @@ function setScale(element) {
     element.height *= scaleHeight;
 }
 
-function initAnimation() {
-    for (let i = 1; i < 11; i++) {
-        let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
-        explosionTextures.push(texture);
-    }
-}
-
 function isOutPosition(sprite) {
     if (sprite.x > WIDTH || sprite.x < 0 || sprite.y > HEIGHT || sprite.y < 0 || sprite.scale.x > 0.30) {
         return true;
@@ -73,6 +66,13 @@ class explosions {
             explosion.stop();
             explosion.destroy();
         };
+    }
+
+    static initAnimation() {
+        for (let i = 1; i < 11; i++) {
+            let texture = new PIXI.Texture.fromImage('images/explosion/' + i + '.png');
+            explosionTextures.push(texture);
+        }
     }
 }
 

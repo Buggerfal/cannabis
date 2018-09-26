@@ -40,7 +40,7 @@ class Game {
             this.playerScore();
             this.createHeart();
             this.money();
-            initAnimation();
+            explosions.initAnimation();
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
                 this.allEnemies.push(enemy);
@@ -315,10 +315,10 @@ class Game {
 
 let newGame = new Game();
 
-// Нельзя юзнуть навык два раза
 // Создлать уровень
 // Создать Инструкцию
 // get для жизней, очей и баксов
 // Utils create
 // initAnimation to explosion
 // Merge branch
+// Все функции и методы на процентах
