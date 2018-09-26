@@ -90,9 +90,10 @@ class Game {
     }
 
     BurstShooting() {
-        if (this._moneyForShot < 30) return;
+        if (this._moneyForShot < 30 || this._checkBurstShooting) return;
 
         this._moneyForShot -= 30;
+        this._checkBurstShooting = true;
 
         const self = this;
         let x = 0,
@@ -110,7 +111,39 @@ class Game {
 
         setTimeout(() => {
             clearInterval(self._intervalSuperPower);
+            this._checkBurstShooting = false;
         }, 7000);
+    }
+
+    autoAim() {
+        if (this._moneyForShot < 20 || this._checkAutoAim) return;
+
+        this._moneyForShot -= 20;
+        let allEnemies = this.allEnemies;
+        this._checkAutoAim = true;
+
+        const superKill = setInterval(() => {
+            allEnemies.forEach((en) => {
+                document.dispatchEvent(new MouseEvent('click', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window,
+                    clientX: en.x,
+                    clientY: en.y
+                }));
+            })
+
+        }, 300);
+
+        setTimeout(() => {
+            clearInterval(superKill);
+            this._checkAutoAim = false;
+        }, 7000);
+    }
+
+    hitEnemy() {
+        this._score += 100;
+        this._moneyForShot += 1;
     }
 
     stopInterval() {
@@ -259,35 +292,6 @@ class Game {
 
             this._scoreHearts.push(heart);
         };
-    }
-
-    hitEnemy() {
-        this._score += 100;
-        this._moneyForShot += 1;
-    }
-
-    autoAim() {
-        if (this._moneyForShot < 20) return;
-
-        this._moneyForShot -= 20;
-        let allEnemies = this.allEnemies;
-
-        const superKill = setInterval(() => {
-            allEnemies.forEach((en) => {
-                document.dispatchEvent(new MouseEvent('click', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window,
-                    clientX: en.x,
-                    clientY: en.y
-                }));
-            })
-
-        }, 300);
-
-        setTimeout(() => {
-            clearInterval(superKill);
-        }, 7000);
     }
 
     restartGame() {
