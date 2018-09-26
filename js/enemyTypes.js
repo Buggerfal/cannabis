@@ -1,7 +1,6 @@
 class EnemyFast extends Enemy {
     constructor(game) {
-        super(game, 100);
-        this._enemy._life = 1;
+        super(game, 100, 1);
     }
 }
 
@@ -9,8 +8,7 @@ Enemy.registerNewEnemy(game => new EnemyFast(game));
 
 class EnemySlow extends Enemy {
     constructor(game) {
-        super(game, 200);
-        this._enemy._life = 1;
+        super(game, 200, 1);
     }
 }
 
@@ -18,18 +16,24 @@ Enemy.registerNewEnemy(game => new EnemySlow(game));
 
 class EnemySuperSlow extends Enemy {
     constructor(game) {
-        super(game, 300);
-        this._enemy._life = 1;
+        super(game, 300, 1);
     }
 }
 
 Enemy.registerNewEnemy(game => new EnemySuperSlow(game));
 
-class EnemyFourLife extends Enemy {
+class EnemyTwoLife extends Enemy {
     constructor(game) {
-        super(game, 300);
-        this._enemy._life = 2;
+        super(game, 300, 2);
     }
 }
 
-Enemy.registerNewEnemy(game => new EnemyFourLife(game));
+Enemy.registerNewEnemy(game => new EnemyTwoLife(game));
+
+class SuperEnemy extends Enemy {
+    constructor(game) {
+        super(game, 300, 3);
+    }
+}
+
+Enemy.registerNewEnemy(game => new SuperEnemy(game));

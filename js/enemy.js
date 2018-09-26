@@ -1,8 +1,11 @@
 class Enemy {
-    constructor(game, speed) {
+    constructor(game, speed, life) {
+
+        this._auraColors = ['0xffffb3', '0xffff00', '0x1a000d'];
         this._game = game;
         this._app = game.app;
         this._speed = speed || 100;
+        this._life = life || 1;
         this.sizes = 100;
         const positionRnd = Enemy.randomEnemyPosition();
 
@@ -15,6 +18,8 @@ class Enemy {
             height: this.sizes,
             path: 'images/enemy/' + randomInteger(1, 2) + '.png'
         });
+
+        this._enemy._life = life;
 
         this._moveEnemy();
     }
@@ -66,7 +71,7 @@ class Enemy {
     drawAura(app, x, y) {
         const circle = new PIXI.Graphics();
         circle.lineStyle(0);
-        circle.beginFill(0xFF3300, 0.5);
+        circle.beginFill(this._auraColors[this._life - 1], 0.5);
         circle.drawCircle(x, y, this.sizes);
         circle.endFill();
 
