@@ -42,7 +42,7 @@ class Enemy {
                 playSound('death.mp3');
                 this._game.decreaseScore();
 
-                game._allEnemies = game._allEnemies.filter((element, index) => {
+                game.allEnemies = game.allEnemies.filter((element, index) => {
                     return element != this;
                 });
 
@@ -76,6 +76,7 @@ class Enemy {
         circle.endFill();
 
         app.stage.addChild(circle);
+
 
         return circle;
     }
