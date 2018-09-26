@@ -55,7 +55,7 @@ class Shot {
     }
 
     _checkСollision() {
-        let allEnemies = this._game._allEnemies;
+        let allEnemies = this._game.allEnemies;
 
         for (let i = 0; i < allEnemies.length; i++) {
             var isCollision = getIsCollide(this._shot, allEnemies[i]);

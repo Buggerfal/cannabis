@@ -14,7 +14,7 @@ class Game {
     constructor(game, speed) {
         this._score = 0;
         this._moneyForShot = 0;
-        this._allEnemies = [];
+        this.allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
 
@@ -42,7 +42,7 @@ class Game {
             initAnimation();
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
-                this._allEnemies.push(enemy);
+                this.allEnemies.push(enemy);
             }, 1500);
 
             this._onMouseMove = this._onMouseMove.bind(this);
@@ -151,7 +151,7 @@ class Game {
         document.removeEventListener('mousemove', this._onMouseMove);
         document.removeEventListener('click', this._playerShot);
         this.stopInterval();
-        this._allEnemies.forEach((el) => {
+        this.allEnemies.forEach((el) => {
             el.destroy();
         });
 
@@ -269,7 +269,7 @@ class Game {
         if (this._moneyForShot < 20) return;
 
         this._moneyForShot -= 20;
-        let allEnemies = this._allEnemies;
+        let allEnemies = this.allEnemies;
 
         const superKill = setInterval(() => {
             allEnemies.forEach((en) => {
@@ -309,3 +309,11 @@ class Game {
 }
 
 let newGame = new Game();
+
+// Нельзя юзнуть навык два раза
+// Создлать уровень
+// Создать Инструкцию
+// get для жизней, очей и баксов
+// Utils create
+// initAnimation to explosion
+// Merge branch
