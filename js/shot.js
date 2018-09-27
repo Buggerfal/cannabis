@@ -29,11 +29,10 @@ class Shot {
 
         ticker.stop();
         ticker.add(() => {
-            if (isOutPosition(this._shot)) {
+            if (this._shot.scale.x > 0.3) {
+                this._ticker.stop();
+                this._ticker.destroy();
                 this._shot.destroy();
-                ticker.stop();
-                ticker.destroy();
-
                 return;
             }
 
@@ -45,6 +44,7 @@ class Shot {
 
             this._checkСollision(ticker);
         });
+
         this._ticker = ticker;
         ticker.start();
     }
@@ -61,7 +61,8 @@ class Shot {
         let allEnemies = this._game.allEnemies;
 
         for (let i = 0; i < allEnemies.length; i++) {
-            var isCollision = getIsCollide(this._shot, allEnemies[i]);
+            let isCollision = getIsCollide(this._shot, allEnemies[i]);
+
             if (isCollision) {
                 if (allEnemies[i]._enemy._life <= 1) {
                     allEnemies[i].destroy();
@@ -79,7 +80,6 @@ class Shot {
 
     _destroy() {
         new explosions(this._app, this._shot.x, this._shot.y);
-
         this._game.hitEnemy();
         this._ticker.stop();
         this._ticker.destroy();
