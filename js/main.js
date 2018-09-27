@@ -13,17 +13,8 @@ class Game {
     constructor(game, speed) {
         this.settingsPosition = new Settings;
         this.settingsSizes = new Settings;
-
-        this._positionsForElements = {
-            heartsX: 75,
-            heartsY: 90,
-            levelX: 94,
-            levelY: 3,
-            scoreX: 3,
-            scoreY: 3,
-            moneyX: 3,
-            moneyY: 15
-        };
+        this._sizesPath = this.settingsSizes._elementSizes;
+        this._positionsPath = this.settingsPosition._positionsForElements;
 
         this.allEnemies = [];
         this._intervalEnemy;
@@ -42,8 +33,8 @@ class Game {
         const buttonStart = createSprite(this.app, {
             x: x,
             y: y,
-            width: this.settingsSizes._elementSizes.buttonPlayWidth,
-            height: this.settingsSizes._elementSizes.buttonPlayHeight,
+            width: this._sizesPath.buttonPlayWidth,
+            height: this._sizesPath.buttonPlayHeight,
             path: 'images/interface/button-play.png',
             interactive: true
         });
@@ -91,7 +82,7 @@ class Game {
     _drawPlayerLevel() {
         this.app._playerLvl = this._playerLevel;
 
-        const xAndY = percentages(this._positionsForElements.levelX, this._positionsForElements.levelY);
+        const xAndY = percentages(this._positionsPath.levelX, this._positionsPath.levelY);
         const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
 
         playerLvl.x = xAndY.x;
@@ -110,7 +101,7 @@ class Game {
     _drawPlayerScore() {
         this.app._playerScore = this._playerScore;
 
-        const xAndY = percentages(this._positionsForElements.scoreX, this._positionsForElements.scoreY);
+        const xAndY = percentages(this._positionsPath.scoreX, this._positionsPath.scoreY);
         const score = new PIXI.Text("Score: " + this._playerScore, styleForAllText);
         score.x = xAndY.x;
         score.y = xAndY.y;
@@ -128,7 +119,7 @@ class Game {
     _drawPlayerMoney() {
         this.app._playerMoney = this._playerMoney;
 
-        const xAndY = percentages(this._positionsForElements.moneyX, this._positionsForElements.moneyY);
+        const xAndY = percentages(this._positionsPath.moneyX, this._positionsPath.moneyY);
         const money = new PIXI.Text(this._playerMoney, styleForAllText);
         money.x = xAndY.x;
         money.y = xAndY.y + money.height;
@@ -148,8 +139,8 @@ class Game {
         const drawPlayerMoney = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
-            width: this.settingsSizes._elementSizes.iconMoneyWidth,
-            height: this.settingsSizes._elementSizes.iconMoneyHeight,
+            width: this._sizesPath.iconMoneyWidth,
+            height: this._sizesPath.iconMoneyHeight,
             path: 'images/money.png'
         });
 
@@ -263,8 +254,8 @@ class Game {
         this._aim = createSprite(this.app, {
             x: x,
             y: y,
-            width: this.settingsSizes._elementSizes.aimWidth,
-            height: this.settingsSizes._elementSizes.aimHeight,
+            width: this._sizesPath.aimWidth,
+            height: this._sizesPath.aimHeight,
             path: 'images/aim.png'
         });
     }
@@ -274,8 +265,8 @@ class Game {
             path: 'images/player.png',
             x: x,
             y: y,
-            width: this.settingsSizes._elementSizes.playerWidth,
-            height: this.settingsSizes._elementSizes.playerHeight
+            width: this._sizesPath.playerWidth,
+            height: this._sizesPath.playerHeight
         });
     }
 
@@ -327,15 +318,15 @@ class Game {
 
     createHeart() {
         this._scoreHearts = [];
-        const xAndY = percentages(this._positionsForElements.heartsX, this._positionsForElements.heartsY);
+        const xAndY = percentages(this._positionsPath.heartsX, this._positionsPath.heartsY);
         let stepX = xAndY.x;
         for (let i = 0; i <= 2; i++) {
 
             const heart = createSprite(this.app, {
                 x: stepX,
                 y: xAndY.y,
-                width: this.settingsSizes._elementSizes.heartWidth,
-                height: this.settingsSizes._elementSizes.heartHeight,
+                width: this._sizesPath.heartWidth,
+                height: this._sizesPath.heartHeight,
                 path: 'images/interface/heart-live.png'
             });
 
@@ -350,8 +341,8 @@ class Game {
         const restart = createSprite(this.app, {
             x: WIDTH / 2,
             y: HEIGHT / 3,
-            width: this.settingsSizes._elementSizes.buttonRestartWidth,
-            height: this.settingsSizes._elementSizes.buttonRestartHeight,
+            width: this._sizesPath.buttonRestartWidth,
+            height: this._sizesPath.buttonRestartHeight,
             path: 'images/interface/restart.png',
             interactive: true
         });
