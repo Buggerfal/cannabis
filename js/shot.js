@@ -65,15 +65,14 @@ class Shot {
             let isCollision = getIsCollide(this._shot, allEnemies[i]);
 
             if (isCollision) {
-                if (allEnemies[i]._enemy._life <= 1) {
+                this._destroy();
+
+                if (!allEnemies[i].decreaseLife()) {
                     allEnemies[i].destroy();
                     allEnemies.splice(i, 1);
-                    this._destroy();
                     return;
-                } else {
-                    allEnemies[i]._enemy._life -= 1;
-                    this._destroy();
                 }
+
             }
         }
 

@@ -20,13 +20,21 @@ class Enemy {
             path: 'images/enemy/' + Utils.random(1, 2) + '.png'
         });
 
-        this._enemy._life = life;
         this._moveEnemy();
     }
 
     static get _auraColors() {
         Enemy._auraColorsArray = Enemy._auraColorsArray || ['0xffffb3', '0xffff00', '0x1a000d'];
         return Enemy._auraColorsArray;
+    }
+
+    decreaseLife() {
+        if (this._life === 1) {
+            return false;
+        }
+
+        this._life--;
+        return true;
     }
 
     _moveEnemy() {
