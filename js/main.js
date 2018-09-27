@@ -21,7 +21,7 @@ class Game {
         this._intervalSuperPower;
         this._checkAutoAim = false;
         this._checkBurstShooting = false;
-        this._playerMoney = 0;
+        this._playerMoney = 100000;
         this._playerLevel = 0;
         this._playerScore = 0;
 
@@ -332,7 +332,7 @@ class Game {
         }
 
         if (this._scoreHearts.length <= 0) {
-            this._endGame();
+            // this._endGame();
         }
     }
 

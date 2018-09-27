@@ -2,6 +2,7 @@ class Enemy {
     constructor(game, speed, life) {
         this.settingsSizes = new Settings;
         this._sizesPath = this.settingsSizes._elementSizes;
+        this._sound = new Sound;
 
         this._auraColors = ['0xffffb3', '0xffff00', '0x1a000d'];
         this._game = game;
@@ -39,7 +40,7 @@ class Enemy {
             const isCollide = getIsCollide(player, this);
 
             if (isCollide) {
-                playSound('death.mp3');
+                this._sound.play(this._sound.typesSound.death);
                 this._game.decreaseScore();
 
                 game.allEnemies = game.allEnemies.filter((element, index) => {

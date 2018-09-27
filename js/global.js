@@ -86,13 +86,6 @@ class explosions {
     }
 }
 
-const playSound = (name) => {
-    const path = `music/${name}`;
-    const sound = PIXI.sound.Sound.from(path);
-    // sound.volume = 0.25;
-    sound.play();
-};
-
 const createSprite = (app, options) => {
     options = Object.assign({
         x: 0,

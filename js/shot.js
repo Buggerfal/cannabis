@@ -1,5 +1,6 @@
 class Shot {
     constructor(x, y, game) {
+        this._sound = new Sound;
         this.settingsSizes = new Settings;
         this._sizesPath = this.settingsSizes._elementSizes;
 
@@ -25,7 +26,7 @@ class Shot {
         let step = 0;
         const stepX = (x - this._shot.x) / 20;
         const stepY = (this._shot.y - y) / 20;
-        playSound('shot.mp3');
+        this._sound.play(this._sound.typesSound.shot);
 
         ticker.stop();
         ticker.add(() => {
@@ -84,6 +85,6 @@ class Shot {
         this._ticker.stop();
         this._ticker.destroy();
         this._shot.destroy();
-        playSound('explosion.mp3');
+        this._sound.play(this._sound.typesSound.explosion);
     }
 }
