@@ -75,6 +75,8 @@ class explosions {
         explosion.onComplete = () => {
             explosion.stop();
             explosion.destroy();
+            app.stage.removeChild(explosion);
+
         };
     }
 

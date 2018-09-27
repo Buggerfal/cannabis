@@ -86,6 +86,7 @@ class Enemy {
         this._ticker.stop();
         this._ticker.destroy();
         this._enemy.destroy();
+        this._app.stage.removeChild(this._enemy);
         this._aura.destroy();
     }
 

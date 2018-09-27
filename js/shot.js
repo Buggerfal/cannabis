@@ -85,6 +85,7 @@ class Shot {
         this._ticker.stop();
         this._ticker.destroy();
         this._shot.destroy();
+        this._app.stage.removeChild(this._shot);
         this._sound.play(this._sound.typesSound.explosion);
     }
 }
