@@ -9,17 +9,17 @@ const styleForAllText = new window.PIXI.TextStyle({
     fill: '#ffffff'
 });
 
-//---------------GAME ------------------//
 class Game {
     constructor(game, speed) {
-        this._moneyForShot = 0;
         this.allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
         this._checkAutoAim = false;
         this._checkBurstShooting = false;
+        this._playerMoney = 0;
         this._playerLevel = 0;
         this._playerScore = 0;
+
         this.initApp();
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
@@ -37,6 +37,7 @@ class Game {
         buttonStart.on("click", () => {
             this.app.stage.removeChild(buttonStart);
             this._initInterface();
+            this._drawPlayerMoney();
 
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
@@ -68,14 +69,15 @@ class Game {
         this.drawAim(WIDTH / 2, HEIGHT / 2);
         this._drawPlayerScore();
         this.createHeart();
-        this.money();
+        this._drawIconMoney();
         this._drawPlayerLevel();
         explosions.initAnimation();
     }
 
     _drawPlayerLevel() {
-        const xAndY = percentages(94, 3);
         this.app._playerLvl = this._playerLevel;
+
+        const xAndY = percentages(94, 3);
         const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
 
         playerLvl.x = xAndY.x;
@@ -87,13 +89,14 @@ class Game {
         this._textLvl = playerLvl;
     }
 
-    _destroyLvl() {
+    _destroyPlayerLevel() {
         this._textLvl.destroy();
     }
 
     _drawPlayerScore() {
-        const xAndY = percentages(3, 3);
         this.app._playerScore = this._playerScore;
+
+        const xAndY = percentages(3, 3);
         const score = new PIXI.Text("Score: " + this._playerScore, styleForAllText);
         score.x = xAndY.x;
         score.y = xAndY.y;
@@ -108,12 +111,27 @@ class Game {
         this._texScore.destroy();
     }
 
-    money() {
-        const xAndY = percentages(3, 15);
-        const ticker = new window.PIXI.ticker.Ticker();
-        let moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+    _drawPlayerMoney() {
+        this.app._playerMoney = this._playerMoney;
 
-        const money = createSprite(this.app, {
+        const xAndY = percentages(3, 15);
+        const money = new PIXI.Text(this._playerMoney, styleForAllText);
+        money.x = xAndY.x;
+        money.y = xAndY.y + money.height;
+        money.anchor.set(0.5);
+        setScale(money);
+
+        this.app.stage.addChild(money);
+        this._textMoney = money;
+    }
+
+    _destroyPlayerMoney() {
+        this._textMoney.destroy();
+    }
+
+    _drawIconMoney() {
+        const xAndY = percentages(3, 15);
+        const drawPlayerMoney = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
             width: 50,
@@ -121,20 +139,29 @@ class Game {
             path: 'images/money.png'
         });
 
-        ticker.stop();
-        ticker.add(() => {
-            this.app.stage.removeChild(moneyShot);
-            moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+        this.app.stage.addChild(drawPlayerMoney);
+    }
 
-            moneyShot.x = xAndY.x;
-            moneyShot.y = xAndY.y + money.height;
-            moneyShot.anchor.set(0.5);
+    hitEnemy() {
+        this._playerScore += 100;
+        this._playerMoney += 1;
 
-            this.app.stage.addChild(moneyShot);
+        this._destroyPlayerScore();
+        this._destroyPlayerMoney();
+        this._drawPlayerScore();
+        this._drawPlayerMoney();
+
+        let checkLvlScore = playerLevel.filter((el, index) => {
+            if (el.score === this._playerScore) {
+                return el.level;
+            }
+            return;
         });
-        this._moneyShot = this.moneyShot;
-        ticker.start();
-
+        if (checkLvlScore.length > 0) {
+            this._playerLevel = checkLvlScore[0].level;
+            this._destroyPlayerLevel();
+            this._drawPlayerLevel();
+        }
     }
 
     _playerShot(event) {
@@ -156,9 +183,9 @@ class Game {
     }
 
     BurstShooting() {
-        if (this._moneyForShot < 30 || this._checkBurstShooting) return;
+        if (this._playerMoney < 30 || this._checkBurstShooting) return;
 
-        this._moneyForShot -= 30;
+        this._playerMoney -= 30;
         this._checkBurstShooting = true;
 
         const self = this;
@@ -182,9 +209,9 @@ class Game {
     }
 
     autoAim() {
-        if (this._moneyForShot < 20 || this._checkAutoAim) return;
+        if (this._playerMoney < 20 || this._checkAutoAim) return;
 
-        this._moneyForShot -= 20;
+        this._playerMoney -= 20;
         let allEnemies = this.allEnemies;
         this._checkAutoAim = true;
 
@@ -205,26 +232,6 @@ class Game {
             clearInterval(superKill);
             this._checkAutoAim = false;
         }, 7000);
-    }
-
-    hitEnemy() {
-        this._playerScore += 100;
-        this._moneyForShot += 1;
-
-        this._destroyPlayerScore();
-        this._drawPlayerScore();
-
-        let checkLvlScore = playerLevel.filter((el, index) => {
-            if (el.score === this._playerScore) {
-                return el.level;
-            }
-            return;
-        });
-        if (checkLvlScore.length > 0) {
-            this._playerLevel = checkLvlScore[0].level;
-            this._destroyLvl();
-            this._drawPlayerLevel();
-        }
     }
 
     stopInterval() {
@@ -335,7 +342,6 @@ class Game {
             interactive: true
         });
 
-        //TODO - delete eventListenner All
         restart.on('click', () => {
             document.body.removeChild(self.app.view);
             let game = new Game();
