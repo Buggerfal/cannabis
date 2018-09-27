@@ -185,7 +185,7 @@ class Game {
     }
 
     _drawIconMoney() {
-        const xAndY = percentages(3, 15);
+        const xAndY = percentages(this._positionsPath.iconMoneyX, this._positionsPath.iconMoneyY);
         const drawPlayerMoney = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
