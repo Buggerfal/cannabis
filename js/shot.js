@@ -1,5 +1,8 @@
 class Shot {
     constructor(x, y, game) {
+        this.settingsSizes = new Settings;
+        this._sizesPath = this.settingsSizes._elementSizes;
+
         this._game = game;
         this._app = game.app;
         this._drawShot();
@@ -11,8 +14,8 @@ class Shot {
         this._shot = createSprite(this._app, {
             x: WIDTH / 2,
             y: HEIGHT / 2,
-            width: 25,
-            height: 25,
+            width: this._sizesPath.shotWidth,
+            height: this._sizesPath.shotHeight,
             path: 'images/shot.png'
         });
     }
