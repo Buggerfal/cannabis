@@ -12,7 +12,6 @@ const styleForAllText = new window.PIXI.TextStyle({
 //---------------GAME ------------------//
 class Game {
     constructor(game, speed) {
-        this._score = 0;
         this._moneyForShot = 0;
         this.allEnemies = [];
         this._intervalEnemy;
@@ -20,6 +19,7 @@ class Game {
         this._checkAutoAim = false;
         this._checkBurstShooting = false;
         this._playerLevel = 0;
+        this._playerScore = 0;
         this.initApp();
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
@@ -38,7 +38,7 @@ class Game {
             this.app.stage.removeChild(buttonStart);
             this.addPlayer(WIDTH / 2, HEIGHT / 2);
             this.drawAim(WIDTH / 2, HEIGHT / 2);
-            this.playerScore();
+            this._drawPlayerScore();
             this.createHeart();
             this.money();
             this._drawPlayerLevel();
@@ -70,9 +70,9 @@ class Game {
     }
 
     _drawPlayerLevel() {
+        const xAndY = percentages(94, 3);
         this.app._playerLvl = this._playerLevel;
         const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
-        const xAndY = percentages(94, 3);
 
         playerLvl.x = xAndY.x;
         playerLvl.y = xAndY.y;
@@ -85,6 +85,52 @@ class Game {
 
     _destroyLvl() {
         this._textLvl.destroy();
+    }
+
+    _drawPlayerScore() {
+        const xAndY = percentages(3, 3);
+        this.app._playerScore = this._playerScore;
+        const score = new PIXI.Text("Score: " + this._playerScore, styleForAllText);
+        score.x = xAndY.x;
+        score.y = xAndY.y;
+        score.anchor.set(0.5);
+        setScale(score);
+
+        this.app.stage.addChild(score);
+        this._texScore = score;
+    }
+
+    _destroyPlayerScore() {
+        this._texScore.destroy();
+    }
+
+    money() {
+        const xAndY = percentages(3, 15);
+        const ticker = new window.PIXI.ticker.Ticker();
+        let moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+
+        const money = createSprite(this.app, {
+            x: xAndY.x,
+            y: xAndY.y,
+            width: 50,
+            height: 50,
+            path: 'images/money.png'
+        });
+
+        ticker.stop();
+        ticker.add(() => {
+            this.app.stage.removeChild(moneyShot);
+            moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
+
+            moneyShot.x = xAndY.x;
+            moneyShot.y = xAndY.y + money.height;
+            moneyShot.anchor.set(0.5);
+
+            this.app.stage.addChild(moneyShot);
+        });
+        this._moneyShot = this.moneyShot;
+        ticker.start();
+
     }
 
     _playerShot(event) {
@@ -158,10 +204,14 @@ class Game {
     }
 
     hitEnemy() {
-        this._score += 100;
+        this._playerScore += 100;
         this._moneyForShot += 1;
+
+        this._destroyPlayerScore();
+        this._drawPlayerScore();
+
         let checkLvlScore = playerLevel.filter((el, index) => {
-            if (el.score === this._score) {
+            if (el.score === this._playerScore) {
                 return el.level;
             }
             return;
@@ -224,7 +274,7 @@ class Game {
 
     showInfo() {
         const infoText = "Your high score : ";
-        const playerHightScore = new PIXI.Text(infoText + this._score, styleForAllText);
+        const playerHightScore = new PIXI.Text(infoText + this._playerScore, styleForAllText);
 
         this._scoreTicker.stop();
         this._scoreTicker.destroy();
@@ -236,57 +286,6 @@ class Game {
         setScale(playerHightScore);
 
         this.app.stage.addChild(playerHightScore);
-    }
-
-    playerScore() {
-        const xAndY = percentages(3, 3);
-        const ticker = new window.PIXI.ticker.Ticker();
-        let playerScoreText = new PIXI.Text(this._score, styleForAllText);
-
-        ticker.stop();
-        ticker.add(() => {
-            this.app.stage.removeChild(playerScoreText);
-            playerScoreText = new PIXI.Text(this._score, styleForAllText);
-
-            playerScoreText.x = xAndY.x;
-            playerScoreText.y = xAndY.y;
-
-            this.app.stage.addChild(playerScoreText);
-
-        });
-
-        this._playerScoreText = playerScoreText;
-        this._scoreTicker = ticker;
-        ticker.start();
-    }
-
-    money() {
-        const xAndY = percentages(3, 15);
-        const ticker = new window.PIXI.ticker.Ticker();
-        let moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
-
-        const money = createSprite(this.app, {
-            x: xAndY.x,
-            y: xAndY.y,
-            width: 50,
-            height: 50,
-            path: 'images/money.png'
-        });
-
-        ticker.stop();
-        ticker.add(() => {
-            this.app.stage.removeChild(moneyShot);
-            moneyShot = new PIXI.Text(this._moneyForShot, styleForAllText);
-
-            moneyShot.x = xAndY.x;
-            moneyShot.y = xAndY.y + money.height;
-            moneyShot.anchor.set(0.5);
-
-            this.app.stage.addChild(moneyShot);
-        });
-        this._moneyShot = this.moneyShot;
-        ticker.start();
-
     }
 
     decreaseScore() {
