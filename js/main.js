@@ -36,13 +36,7 @@ class Game {
 
         buttonStart.on("click", () => {
             this.app.stage.removeChild(buttonStart);
-            this.addPlayer(WIDTH / 2, HEIGHT / 2);
-            this.drawAim(WIDTH / 2, HEIGHT / 2);
-            this._drawPlayerScore();
-            this.createHeart();
-            this.money();
-            this._drawPlayerLevel();
-            explosions.initAnimation();
+            this._initInterface();
 
             this._intervalEnemy = setInterval(() => {
                 const enemy = Enemy.getRandomEnemy(this);
@@ -67,6 +61,16 @@ class Game {
                 });
             }, 0);
         });
+    }
+
+    _initInterface() {
+        this.addPlayer(WIDTH / 2, HEIGHT / 2);
+        this.drawAim(WIDTH / 2, HEIGHT / 2);
+        this._drawPlayerScore();
+        this.createHeart();
+        this.money();
+        this._drawPlayerLevel();
+        explosions.initAnimation();
     }
 
     _drawPlayerLevel() {
