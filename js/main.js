@@ -36,8 +36,10 @@ class Game {
             heartWidth: 100,
             heartHeight: 100,
             buttonRestartWidth: 200,
-            buttonRestartHeight: 200
-        }
+            buttonRestartHeight: 200,
+            playerWidth: 140,
+            playerHeight: 95
+        };
 
         this.allEnemies = [];
         this._intervalEnemy;
@@ -56,8 +58,8 @@ class Game {
         const buttonStart = createSprite(this.app, {
             x: x,
             y: y,
-            width: 200,
-            height: 200,
+            width: this._elementSizes.buttonPlayWidth,
+            height: this._elementSizes.buttonPlayHeight,
             path: 'images/interface/button-play.png',
             interactive: true
         });
@@ -162,8 +164,8 @@ class Game {
         const drawPlayerMoney = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
-            width: 50,
-            height: 50,
+            width: this._elementSizes.iconMoneyWidth,
+            height: this._elementSizes.iconMoneyHeight,
             path: 'images/money.png'
         });
 
@@ -277,8 +279,8 @@ class Game {
         this._aim = createSprite(this.app, {
             x: x,
             y: y,
-            width: 128,
-            height: 128,
+            width: this._elementSizes.aimWidth,
+            height: this._elementSizes.aimHeight,
             path: 'images/aim.png'
         });
     }
@@ -288,8 +290,8 @@ class Game {
             path: 'images/player.png',
             x: x,
             y: y,
-            width: 140,
-            height: 95
+            width: this._elementSizes.playerWidth,
+            height: this._elementSizes.playerHeight
         });
     }
 
@@ -348,8 +350,8 @@ class Game {
             const heart = createSprite(this.app, {
                 x: stepX,
                 y: xAndY.y,
-                width: 100,
-                height: 100,
+                width: this._elementSizes.heartWidth,
+                height: this._elementSizes.heartHeight,
                 path: 'images/interface/heart-live.png'
             });
 
@@ -364,8 +366,8 @@ class Game {
         const restart = createSprite(this.app, {
             x: WIDTH / 2,
             y: HEIGHT / 3,
-            width: 200,
-            height: 200,
+            width: this._elementSizes.buttonRestartWidth,
+            height: this._elementSizes.buttonRestartHeight,
             path: 'images/interface/restart.png',
             interactive: true
         });
