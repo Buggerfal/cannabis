@@ -1,0 +1,9 @@
+rename variable
+
+В настройки
+this.settings = { 
+    score: {
+        x: 7,
+        y: 3
+    },
+}

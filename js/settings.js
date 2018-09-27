@@ -13,13 +13,6 @@ class Settings {
             iconMoneyY: 95
         };
 
-        // this.settings = {
-        //     score: {
-        //         x: 7,
-        //         y: 3
-        //     },
-        // }
-
         this._elementSizes = {
             enemyWidth: 100,
             enemyHeight: 100,
