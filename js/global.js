@@ -1,4 +1,5 @@
 let explosionTextures = [];
+
 const playerLevel = [
     { score: 1000, level: 1 },
     { score: 2000, level: 2 },
