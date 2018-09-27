@@ -22,6 +22,21 @@ class Game {
             moneyY: 15
         };
 
+        this._elementSizes = {
+            enemyWidth: 100,
+            enemyHeight: 100,
+            shotWidth: 25,
+            shotHeight: 25,
+            buttonPlayWidth: 200,
+            buttonPlayHeight: 200,
+            aimWidth: 128,
+            aimHeight: 128,
+            iconMoneyWidth: 50,
+            iconMoneyHeight: 50,
+            heartWidth: 100,
+            heartHeight: 100
+        }
+
         this.allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
