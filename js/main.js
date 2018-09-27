@@ -29,6 +29,12 @@ class Game {
         this.buttonPlay(WIDTH / 2, HEIGHT / 2);
     }
 
+    initApp() {
+        const self = this;
+        self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
+        document.body.appendChild(self.app.view);
+    }
+
     buttonPlay(x, y) {
         const buttonStart = createSprite(this.app, {
             x: x,
@@ -70,13 +76,57 @@ class Game {
     }
 
     _initInterface() {
-        this.addPlayer(WIDTH / 2, HEIGHT / 2);
+        this._drawPlayer(WIDTH / 2, HEIGHT / 2);
         this.drawAim(WIDTH / 2, HEIGHT / 2);
         this._drawPlayerScore();
         this.createHeart();
         this._drawIconMoney();
         this._drawPlayerLevel();
         explosions.initAnimation();
+    }
+
+    _drawPlayer(x, y) {
+        this._player = createSprite(this.app, {
+            path: 'images/player.png',
+            x: x,
+            y: y,
+            width: this._sizesPath.playerWidth,
+            height: this._sizesPath.playerHeight
+        });
+    }
+
+    rotatePlayer(deg) {
+        this._player.rotation = inRad(deg);
+    }
+
+    drawAim(x, y) {
+        this._aim = createSprite(this.app, {
+            x: x,
+            y: y,
+            width: this._sizesPath.aimWidth,
+            height: this._sizesPath.aimHeight,
+            path: 'images/aim.png'
+        });
+    }
+
+    createHeart() {
+        this._scoreHearts = [];
+        const xAndY = percentages(this._positionsPath.heartsX, this._positionsPath.heartsY);
+        let stepX = xAndY.x;
+        for (let i = 0; i <= 2; i++) {
+
+            const heart = createSprite(this.app, {
+                x: stepX,
+                y: xAndY.y,
+                width: this._sizesPath.heartWidth,
+                height: this._sizesPath.heartHeight,
+                path: 'images/interface/heart-live.png'
+            });
+
+            stepX += heart.width + heart.width / 6;
+
+            this._scoreHearts.push(heart);
+        };
     }
 
     _drawPlayerLevel() {
@@ -169,10 +219,6 @@ class Game {
         }
     }
 
-    _playerShot(event) {
-        let newShot = new Shot(event.clientX, event.clientY, this);
-    }
-
     _onMouseMove(event) {
         const self = this;
         const playerCenter = {
@@ -185,6 +231,10 @@ class Game {
         self.rotatePlayer(angle);
         self._aim.x = event.clientX;
         self._aim.y = event.clientY;
+    }
+
+    _playerShot(event) {
+        let newShot = new Shot(event.clientX, event.clientY, this);
     }
 
     BurstShooting() {
@@ -244,36 +294,6 @@ class Game {
         clearInterval(this._intervalSuperPower);
     }
 
-    initApp() {
-        const self = this;
-        self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
-        document.body.appendChild(self.app.view);
-    }
-
-    drawAim(x, y) {
-        this._aim = createSprite(this.app, {
-            x: x,
-            y: y,
-            width: this._sizesPath.aimWidth,
-            height: this._sizesPath.aimHeight,
-            path: 'images/aim.png'
-        });
-    }
-
-    addPlayer(x, y) {
-        this._player = createSprite(this.app, {
-            path: 'images/player.png',
-            x: x,
-            y: y,
-            width: this._sizesPath.playerWidth,
-            height: this._sizesPath.playerHeight
-        });
-    }
-
-    rotatePlayer(deg) {
-        this._player.rotation = inRad(deg);
-    }
-
     _endGame() {
         document.removeEventListener('mousemove', this._onMouseMove);
         document.removeEventListener('click', this._playerShot);
@@ -314,26 +334,6 @@ class Game {
         if (this._scoreHearts.length <= 0) {
             this._endGame();
         }
-    }
-
-    createHeart() {
-        this._scoreHearts = [];
-        const xAndY = percentages(this._positionsPath.heartsX, this._positionsPath.heartsY);
-        let stepX = xAndY.x;
-        for (let i = 0; i <= 2; i++) {
-
-            const heart = createSprite(this.app, {
-                x: stepX,
-                y: xAndY.y,
-                width: this._sizesPath.heartWidth,
-                height: this._sizesPath.heartHeight,
-                path: 'images/interface/heart-live.png'
-            });
-
-            stepX += heart.width + heart.width / 6;
-
-            this._scoreHearts.push(heart);
-        };
     }
 
     restartGame() {
