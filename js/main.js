@@ -11,6 +11,17 @@ const styleForAllText = new window.PIXI.TextStyle({
 
 class Game {
     constructor(game, speed) {
+        this._positionsForElements = {
+            heartsX: 75,
+            heartsY: 90,
+            levelX: 94,
+            levelY: 3,
+            scoreX: 3,
+            scoreY: 3,
+            moneyX: 3,
+            moneyY: 15
+        };
+
         this.allEnemies = [];
         this._intervalEnemy;
         this._intervalSuperPower;
@@ -77,7 +88,7 @@ class Game {
     _drawPlayerLevel() {
         this.app._playerLvl = this._playerLevel;
 
-        const xAndY = percentages(94, 3);
+        const xAndY = percentages(this._positionsForElements.levelX, this._positionsForElements.levelY);
         const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
 
         playerLvl.x = xAndY.x;
@@ -96,7 +107,7 @@ class Game {
     _drawPlayerScore() {
         this.app._playerScore = this._playerScore;
 
-        const xAndY = percentages(3, 3);
+        const xAndY = percentages(this._positionsForElements.scoreX, this._positionsForElements.scoreY);
         const score = new PIXI.Text("Score: " + this._playerScore, styleForAllText);
         score.x = xAndY.x;
         score.y = xAndY.y;
@@ -114,7 +125,7 @@ class Game {
     _drawPlayerMoney() {
         this.app._playerMoney = this._playerMoney;
 
-        const xAndY = percentages(3, 15);
+        const xAndY = percentages(this._positionsForElements.moneyX, this._positionsForElements.moneyY);
         const money = new PIXI.Text(this._playerMoney, styleForAllText);
         money.x = xAndY.x;
         money.y = xAndY.y + money.height;
@@ -313,7 +324,7 @@ class Game {
 
     createHeart() {
         this._scoreHearts = [];
-        const xAndY = percentages(65, 7);
+        const xAndY = percentages(this._positionsForElements.heartsX, this._positionsForElements.heartsY);
         let stepX = xAndY.x;
         for (let i = 0; i <= 2; i++) {
 
