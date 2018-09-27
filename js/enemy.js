@@ -18,7 +18,7 @@ class Enemy {
             y: positionRnd.y,
             width: this._sizesPath.enemyWidth,
             height: this._sizesPath.enemyHeight,
-            path: 'images/enemy/' + randomInteger(1, 2) + '.png'
+            path: 'images/enemy/' + Utils.random(1, 2) + '.png'
         });
 
         this._enemy._life = life;
@@ -99,7 +99,7 @@ class Enemy {
     }
 
     static randomEnemyPosition() {
-        const randomSide = randomInteger(0, 3);
+        const randomSide = Utils.random(0, 3);
 
         const position = [{
                 minX: 0,
@@ -130,13 +130,13 @@ class Enemy {
         const rndPosition = position[randomSide];
 
         return {
-            x: randomInteger(rndPosition.minX, rndPosition.maxX),
-            y: randomInteger(rndPosition.minY, rndPosition.maxY)
+            x: Utils.random(rndPosition.minX, rndPosition.maxX),
+            y: Utils.random(rndPosition.minY, rndPosition.maxY)
         }
     }
 
     static getRandomEnemy(game) {
-        const rand = randomInteger(0, Enemy.enemyInstances.length - 1);
+        const rand = Utils.random(0, Enemy.enemyInstances.length - 1);
         return Enemy.enemyInstances[rand](game);
     }
 

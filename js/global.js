@@ -15,12 +15,6 @@ function inRad(num) {
     return num * Math.PI / 180;
 }
 
-function randomInteger(min, max) {
-    let rand = min + Math.random() * (max - min);
-    rand = Math.round(rand);
-    return rand;
-}
-
 function getIsCollide(player, enemy) {
     enemy = enemy._enemy;
     let XColl = false;

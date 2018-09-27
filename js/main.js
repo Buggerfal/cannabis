@@ -11,8 +11,9 @@ const styleForAllText = new window.PIXI.TextStyle({
 
 class Game {
     constructor(game, speed) {
-        this.settingsPosition = new Settings;
-        this.settingsSizes = new Settings;
+        this.settingsPosition = new Settings();
+        this.settingsSizes = new Settings();
+        //In one constante
         this._sizesPath = this.settingsSizes._elementSizes;
         this._positionsPath = this.settingsPosition._positionsForElements;
 
@@ -332,7 +333,7 @@ class Game {
         }
 
         if (this._scoreHearts.length <= 0) {
-            // this._endGame();
+            this._endGame();
         }
     }
 
