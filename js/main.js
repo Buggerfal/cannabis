@@ -11,6 +11,9 @@ const styleForAllText = new window.PIXI.TextStyle({
 
 class Game {
     constructor(game, speed) {
+        this.settingsPosition = new Settings;
+        this.settingsSizes = new Settings;
+
         this._positionsForElements = {
             heartsX: 75,
             heartsY: 90,
@@ -20,25 +23,6 @@ class Game {
             scoreY: 3,
             moneyX: 3,
             moneyY: 15
-        };
-
-        this._elementSizes = {
-            enemyWidth: 100,
-            enemyHeight: 100,
-            shotWidth: 25,
-            shotHeight: 25,
-            buttonPlayWidth: 200,
-            buttonPlayHeight: 200,
-            aimWidth: 128,
-            aimHeight: 128,
-            iconMoneyWidth: 50,
-            iconMoneyHeight: 50,
-            heartWidth: 100,
-            heartHeight: 100,
-            buttonRestartWidth: 200,
-            buttonRestartHeight: 200,
-            playerWidth: 140,
-            playerHeight: 95
         };
 
         this.allEnemies = [];
@@ -58,8 +42,8 @@ class Game {
         const buttonStart = createSprite(this.app, {
             x: x,
             y: y,
-            width: this._elementSizes.buttonPlayWidth,
-            height: this._elementSizes.buttonPlayHeight,
+            width: this.settingsSizes._elementSizes.buttonPlayWidth,
+            height: this.settingsSizes._elementSizes.buttonPlayHeight,
             path: 'images/interface/button-play.png',
             interactive: true
         });
@@ -164,8 +148,8 @@ class Game {
         const drawPlayerMoney = createSprite(this.app, {
             x: xAndY.x,
             y: xAndY.y,
-            width: this._elementSizes.iconMoneyWidth,
-            height: this._elementSizes.iconMoneyHeight,
+            width: this.settingsSizes._elementSizes.iconMoneyWidth,
+            height: this.settingsSizes._elementSizes.iconMoneyHeight,
             path: 'images/money.png'
         });
 
@@ -279,8 +263,8 @@ class Game {
         this._aim = createSprite(this.app, {
             x: x,
             y: y,
-            width: this._elementSizes.aimWidth,
-            height: this._elementSizes.aimHeight,
+            width: this.settingsSizes._elementSizes.aimWidth,
+            height: this.settingsSizes._elementSizes.aimHeight,
             path: 'images/aim.png'
         });
     }
@@ -290,8 +274,8 @@ class Game {
             path: 'images/player.png',
             x: x,
             y: y,
-            width: this._elementSizes.playerWidth,
-            height: this._elementSizes.playerHeight
+            width: this.settingsSizes._elementSizes.playerWidth,
+            height: this.settingsSizes._elementSizes.playerHeight
         });
     }
 
@@ -350,8 +334,8 @@ class Game {
             const heart = createSprite(this.app, {
                 x: stepX,
                 y: xAndY.y,
-                width: this._elementSizes.heartWidth,
-                height: this._elementSizes.heartHeight,
+                width: this.settingsSizes._elementSizes.heartWidth,
+                height: this.settingsSizes._elementSizes.heartHeight,
                 path: 'images/interface/heart-live.png'
             });
 
@@ -366,8 +350,8 @@ class Game {
         const restart = createSprite(this.app, {
             x: WIDTH / 2,
             y: HEIGHT / 3,
-            width: this._elementSizes.buttonRestartWidth,
-            height: this._elementSizes.buttonRestartHeight,
+            width: this.settingsSizes._elementSizes.buttonRestartWidth,
+            height: this.settingsSizes._elementSizes.buttonRestartHeight,
             path: 'images/interface/restart.png',
             interactive: true
         });
