@@ -34,7 +34,9 @@ class Game {
             iconMoneyWidth: 50,
             iconMoneyHeight: 50,
             heartWidth: 100,
-            heartHeight: 100
+            heartHeight: 100,
+            buttonRestartWidth: 200,
+            buttonRestartHeight: 200
         }
 
         this.allEnemies = [];
