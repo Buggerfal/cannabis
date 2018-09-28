@@ -38,6 +38,7 @@ class Shot {
             }
 
             step++;
+            // +
             this._shot.x += stepX;
             this._shot.y -= stepY;
             this._shot.scale.x += 0.005;
@@ -62,12 +63,16 @@ class Shot {
         let allEnemies = this._game.allEnemies;
 
         for (let i = 0; i < allEnemies.length; i++) {
+            // console.log(allEnemies[i]._enemy.position);
             let isCollision = getIsCollide(this._shot, allEnemies[i]);
 
             if (isCollision) {
-                this._destroy();
+                //destroy shot
+                //Maybe Error
+                this._shot._destroy();
 
                 if (!allEnemies[i].decreaseLife()) {
+                    //destroy Enemy
                     allEnemies[i].destroy();
                     allEnemies.splice(i, 1);
                     return;

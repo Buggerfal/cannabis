@@ -71,7 +71,6 @@ class explosions {
             explosion.stop();
             explosion.destroy();
             app.stage.removeChild(explosion);
-
         };
     }
 

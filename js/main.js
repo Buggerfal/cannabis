@@ -333,7 +333,7 @@ class Game {
         }
 
         if (this._scoreHearts.length <= 0) {
-            this._endGame();
+            // this._endGame();
         }
     }
 

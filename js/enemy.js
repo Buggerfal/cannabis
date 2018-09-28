@@ -65,7 +65,7 @@ class Enemy {
 
                 return;
             }
-
+            //+
             enemy.x += stepX;
             enemy.y -= stepY;
             aura.x += stepX;

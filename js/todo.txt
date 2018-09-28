@@ -9,3 +9,49 @@ this.settings = {
 }
 
 Сделать сеттингсы статическеими
+
+ресайз
+        window.addEventListener('resize', resize);
+
+        function resize() {
+            // Resize the renderer
+            self.app.renderer.resize(window.innerWidth, window.innerHeight);
+
+            // rect.position.set(self.app.screen.width, self.app.screen.height);
+        }
+
+        resize();
+
+
+
+        class Sound {
+    constructor() {
+        this.typesSound = {
+            explosion: 'explosion.mp3',
+            shot: 'shot.mp3',
+            death: 'death.mp3'
+        };
+    }
+
+    static loadSound(name) {
+        Sound._resources = Sound._resources || {};
+        if (!Sound._resources[name]) {
+            const path = `music/${name}`;
+            Sound._resources[name] = PIXI.sound.Sound.from(path);
+        }
+        return Sound._resources[name];
+    }
+
+    play(name) {
+        const sound = Sound.loadSound(name);
+        sound.play();
+        this.stop(sound)
+    }
+
+    stop(sound) {
+        setTimeout(() => {
+            sound.stop();
+            // sound.destroy();
+        }, 3000);
+    }
+}
