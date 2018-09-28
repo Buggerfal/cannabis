@@ -69,7 +69,7 @@ class Shot {
             if (isCollision) {
                 //destroy shot
                 //Maybe Error
-                this._shot._destroy();
+                this._destroy();
 
                 if (!allEnemies[i].decreaseLife()) {
                     //destroy Enemy
