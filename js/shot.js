@@ -52,7 +52,7 @@ class Shot {
         ticker.start();
     }
 
-    stopShot() {
+    _stop() {
         this._ticker.stop();
     }
 
