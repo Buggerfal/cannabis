@@ -1,5 +1,10 @@
 class Settings {
     constructor() {
+        this.enemy = {
+            width: 100,
+            height: 100
+        };
+
         this._positionsForElements = {
             heartsX: 75,
             heartsY: 90,
@@ -14,8 +19,6 @@ class Settings {
         };
 
         this._elementSizes = {
-            enemyWidth: 100,
-            enemyHeight: 100,
             shotWidth: 25,
             shotHeight: 25,
             buttonPlayWidth: 200,
