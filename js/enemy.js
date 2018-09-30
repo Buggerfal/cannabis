@@ -1,40 +1,38 @@
 class Enemy {
     constructor(game, speed, life) {
+        this._app = game.app;
+        this._game = game;
+
         this._settings = new Settings();
         this._size = this._settings._elementSizes;
+
         this._sound = new Sound();
 
-        this._game = game;
-        this._app = game.app;
         this._speed = speed || 100;
         this._life = life || 1;
         const positionRnd = Enemy.randomEnemyPosition();
 
-        this._aura = this._drawAura(this._app, positionRnd.x, positionRnd.y);
+        this._draw(positionRnd.x, positionRnd.y);
+        this._moveEnemy();
+    }
 
+    _draw(x, y) {
         this._enemy = createSprite(this._app, {
-            x: positionRnd.x,
-            y: positionRnd.y,
+            x: x,
+            y: y,
             width: this._size.enemyWidth,
             height: this._size.enemyHeight,
             path: 'images/enemy/' + Utils.random(1, 2) + '.png'
         });
 
-        this._moveEnemy();
-    }
+        const circle = new PIXI.Graphics();
+        circle.lineStyle(0);
+        circle.beginFill(Enemy._auraColors[this._life - 1], 0.5);
+        circle.drawCircle(x, y, this._size.enemyWidth);
+        circle.endFill();
 
-    static get _auraColors() {
-        Enemy._auraColorsArray = Enemy._auraColorsArray || ['0xffffb3', '0xffff00', '0x1a000d'];
-        return Enemy._auraColorsArray;
-    }
-
-    decreaseLife() {
-        if (this._life === 1) {
-            return false;
-        }
-
-        this._life--;
-        return true;
+        this._app.stage.addChild(circle);
+        this._aura = circle;
     }
 
     _moveEnemy() {
@@ -65,7 +63,7 @@ class Enemy {
 
                 return;
             }
-            //+
+
             enemy.x += stepX;
             enemy.y -= stepY;
             aura.x += stepX;
@@ -75,22 +73,18 @@ class Enemy {
         ticker.start();
     }
 
-    /*
-    1) Заранее по прямой получить точки координат учитывая угол
-    2) ЗАпушить их в массив координат
-    3) Двигать елемент по х и у
-    */
+    static get _auraColors() {
+        Enemy._auraColorsArray = Enemy._auraColorsArray || ['0xffffb3', '0xffff00', '0x1a000d'];
+        return Enemy._auraColorsArray;
+    }
 
-    _drawAura(app, x, y) {
-        const circle = new PIXI.Graphics();
-        circle.lineStyle(0);
-        circle.beginFill(Enemy._auraColors[this._life - 1], 0.5);
-        circle.drawCircle(x, y, this._size.enemyWidth);
-        circle.endFill();
+    decreaseLife() {
+        if (this._life === 1) {
+            return false;
+        }
 
-        app.stage.addChild(circle);
-
-        return circle;
+        this._life--;
+        return true;
     }
 
     destroy() {

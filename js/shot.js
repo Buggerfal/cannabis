@@ -1,22 +1,23 @@
 class Shot {
     constructor(x, y, game) {
-        this._sound = new Sound;
-        this.settingsSizes = new Settings;
-        this._sizesPath = this.settingsSizes._elementSizes;
-
-        this._game = game;
         this._app = game.app;
-        this._drawShot();
+        this._game = game;
+
+        this._settings = new Settings();
+        this._size = this._settings._elementSizes;
+
+        this._sound = new Sound();
+
+        this._draw();
         this._moveShot(x, y);
-        this._coordinatesShot = [{ x: 0, y: 0 }];
     }
 
-    _drawShot() {
+    _draw() {
         this._shot = createSprite(this._app, {
             x: WIDTH / 2,
             y: HEIGHT / 2,
-            width: this._sizesPath.shotWidth,
-            height: this._sizesPath.shotHeight,
+            width: this._size.shotWidth,
+            height: this._size.shotHeight,
             path: 'images/shot.png'
         });
     }
@@ -38,7 +39,7 @@ class Shot {
             }
 
             step++;
-            // +
+
             this._shot.x += stepX;
             this._shot.y -= stepY;
             this._shot.scale.x += 0.005;
@@ -63,13 +64,14 @@ class Shot {
         let allEnemies = this._game.allEnemies;
 
         for (let i = 0; i < allEnemies.length; i++) {
-            let isCollision = getIsCollide(this._shot, allEnemies[i]);
+            const enemy = allEnemies[i];
+            let isCollision = getIsCollide(this._shot, enemy);
 
             if (isCollision) {
                 this._destroy();
 
-                if (!allEnemies[i].decreaseLife()) {
-                    allEnemies[i].destroy();
+                if (!enemy.decreaseLife()) {
+                    enemy.destroy();
                     allEnemies.splice(i, 1);
                 }
                 return;
