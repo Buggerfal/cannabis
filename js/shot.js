@@ -52,14 +52,6 @@ class Shot {
         ticker.start();
     }
 
-    _stop() {
-        this._ticker.stop();
-    }
-
-    startShot() {
-        this._ticker.start();
-    }
-
     _checkСollision() {
         let allEnemies = this._game.allEnemies;
 
