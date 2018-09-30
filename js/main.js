@@ -13,7 +13,7 @@ class Game {
     constructor(game, speed) {
         this.settingsPosition = new Settings();
         this.settingsSizes = new Settings();
-        //In one constante
+
         this._sizesPath = this.settingsSizes._elementSizes;
         this._positionsPath = this.settingsPosition._positionsForElements;
 
@@ -31,9 +31,8 @@ class Game {
     }
 
     initApp() {
-        const self = this;
-        self.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
-        document.body.appendChild(self.app.view);
+        this.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
+        document.body.appendChild(this.app.view);
     }
 
     buttonPlay(x, y) {
@@ -77,27 +76,13 @@ class Game {
     }
 
     _initInterface() {
-        this._drawPlayer(WIDTH / 2, HEIGHT / 2);
+        this._player = new Player(this.app, WIDTH / 2, HEIGHT / 2);
         this.drawAim(WIDTH / 2, HEIGHT / 2);
         this._drawPlayerScore();
         this.createHeart();
         this._drawIconMoney();
         this._drawPlayerLevel();
         explosions.initAnimation();
-    }
-
-    _drawPlayer(x, y) {
-        this._player = createSprite(this.app, {
-            path: 'images/player.png',
-            x: x,
-            y: y,
-            width: this._sizesPath.playerWidth,
-            height: this._sizesPath.playerHeight
-        });
-    }
-
-    rotatePlayer(deg) {
-        this._player.rotation = inRad(deg);
     }
 
     drawAim(x, y) {
@@ -221,17 +206,9 @@ class Game {
     }
 
     _onMouseMove(event) {
-        const self = this;
-        const playerCenter = {
-            x: self._player.x,
-            y: self._player.y
-        };
-
-        const angle = Math.atan2(event.clientX - playerCenter.x, -(event.clientY - playerCenter.y)) * (180 / Math.PI);
-
-        self.rotatePlayer(angle);
-        self._aim.x = event.clientX;
-        self._aim.y = event.clientY;
+        this._player.rotateTo(event.clientX, event.clientY);
+        this._aim.x = event.clientX;
+        this._aim.y = event.clientY;
     }
 
     _playerShot(event) {

@@ -38,7 +38,7 @@ class Enemy {
     _moveEnemy() {
         const enemy = this._enemy;
         const app = this._app;
-        const player = this._game._player;
+        const player = this._game._player._player;
         const game = this._game;
         const aura = this._aura;
         const stepX = (WIDTH / 2 - enemy.x) / this._speed;
@@ -103,6 +103,7 @@ class Enemy {
         return this._enemy.y;
     }
 
+    //TODO: refactor
     static randomEnemyPosition() {
         const randomSide = Utils.random(0, 3);
 
