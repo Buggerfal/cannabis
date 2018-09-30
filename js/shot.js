@@ -3,8 +3,7 @@ class Shot {
         this._app = game.app;
         this._game = game;
 
-        this._settings = new Settings();
-        this._size = this._settings._elementSizes;
+        this._settings = new Settings().shot;
 
         this._sound = new Sound();
 
@@ -16,9 +15,9 @@ class Shot {
         this._shot = createSprite(this._app, {
             x: WIDTH / 2,
             y: HEIGHT / 2,
-            width: this._size.shotWidth,
-            height: this._size.shotHeight,
-            path: 'images/shot.png'
+            width: this._settings.width,
+            height: this._settings.height,
+            path: this._settings.imagePath
         });
     }
 

@@ -5,6 +5,18 @@ class Settings {
             height: 100
         };
 
+        this.shot = {
+            width: 25,
+            height: 25,
+            imagePath: 'images/shot.png'
+        };
+
+        this.aim = {
+            width: 128,
+            height: 128,
+            imagePath: 'images/aim.png'
+        }
+
         this._positionsForElements = {
             heartsX: 75,
             heartsY: 90,
@@ -19,12 +31,8 @@ class Settings {
         };
 
         this._elementSizes = {
-            shotWidth: 25,
-            shotHeight: 25,
             buttonPlayWidth: 200,
             buttonPlayHeight: 200,
-            aimWidth: 128,
-            aimHeight: 128,
             iconMoneyWidth: 50,
             iconMoneyHeight: 50,
             heartWidth: 75,

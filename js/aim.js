@@ -4,8 +4,7 @@ class Aim {
         this._x = x;
         this._y = y;
 
-        this._settings = new Settings();
-        this._size = this._settings._elementSizes;
+        this._settings = new Settings().aim;
 
         this._draw();
     }
@@ -14,9 +13,9 @@ class Aim {
         this._aim = createSprite(this._app, {
             x: this._x,
             y: this._y,
-            width: this._size.aimWidth,
-            height: this._size.aimHeight,
-            path: 'images/aim.png'
+            width: this._settings.width,
+            height: this._settings.height,
+            path: this._settings.imagePath
         });
     }
 
