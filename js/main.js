@@ -3,6 +3,8 @@ const HEIGHT = window.innerHeight;
 
 class Game {
     constructor(game, speed) {
+        this._initApp();
+        this._gameInterface = new GameInterface(this.app);
         this.settingsPosition = new Settings();
         this.settingsSizes = new Settings();
 
@@ -18,66 +20,59 @@ class Game {
         this._playerLevel = 0;
         this._playerScore = 0;
 
-        this.initApp();
-        this.buttonPlay(WIDTH / 2, HEIGHT / 2);
+        this._drawPlayButton();
     }
 
-    initApp() {
+    _initApp() {
         this.app = new PIXI.Application(WIDTH, HEIGHT, { backgroundColor: 0x1099bb });
         document.body.appendChild(this.app.view);
     }
 
-    buttonPlay(x, y) {
-        const buttonStart = createSprite(this.app, {
-            x: x,
-            y: y,
-            width: this._sizesPath.buttonPlayWidth,
-            height: this._sizesPath.buttonPlayHeight,
-            path: 'images/interface/button-play.png',
-            interactive: true
+    _drawPlayButton() {
+        this._gameInterface.drawPlayButton(() => {
+            this._onGameStart();
         });
+    }
 
-        buttonStart.on("click", () => {
-            this.app.stage.removeChild(buttonStart);
-            this._initInterface();
-            this._drawPlayerMoney();
+    _onGameStart() {
+        this._initInterface();
+        this._drawPlayerMoney();
 
-            this._intervalEnemy = setInterval(() => {
-                const enemy = Enemy.getRandomEnemy(this);
-                this.allEnemies.push(enemy);
-            }, 1500);
+        this._intervalEnemy = setInterval(() => {
+            const enemy = Enemy.getRandomEnemy(this);
+            this.allEnemies.push(enemy);
+        }, 1500);
 
-            this._onMouseMove = this._onMouseMove.bind(this);
-            this._playerShot = this._playerShot.bind(this);
+        this._onMouseMove = this._onMouseMove.bind(this);
+        this._playerShot = this._playerShot.bind(this);
 
-            setTimeout(() => {
-                document.addEventListener('mousemove', this._onMouseMove);
-                document.addEventListener('click', this._playerShot);
-                document.addEventListener("keydown", (e) => {
-                    switch (e.keyCode) {
-                        case 81:
-                            this.BurstShooting();
-                            break;
-                        case 87:
-                            this.autoAim();
-                            break;
-                    }
-                });
-            }, 0);
-        });
+        setTimeout(() => {
+            document.addEventListener('mousemove', this._onMouseMove);
+            document.addEventListener('click', this._playerShot);
+            document.addEventListener("keydown", (e) => {
+                switch (e.keyCode) {
+                    case 81:
+                        this.BurstShooting();
+                        break;
+                    case 87:
+                        this.autoAim();
+                        break;
+                }
+            });
+        }, 0);
     }
 
     _initInterface() {
         this._player = new Player(this.app, WIDTH / 2, HEIGHT / 2);
         this._aim = new Aim(this.app, WIDTH / 2, HEIGHT / 2);
         this._drawPlayerScore();
-        this.createHeart();
+        this._drawPlayerLives();
         this._drawIconMoney();
         this._drawPlayerLevel();
         explosions.initAnimation();
     }
 
-    createHeart() {
+    _drawPlayerLives() {
         this._scoreHearts = [];
         const xAndY = percentages(this._positionsPath.heartsX, this._positionsPath.heartsY);
         let stepX = xAndY.x;

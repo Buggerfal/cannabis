@@ -29,6 +29,17 @@ class Settings {
             imagePath: 'images/player.png'
         };
 
+        this.gameInterfaces = {
+            playButton: {
+                x: WIDTH / 2,
+                y: HEIGHT / 2,
+                width: 200,
+                height: 200,
+                imagePath: 'images/interface/button-play.png'
+            }
+
+        };
+
         this._positionsForElements = {
             heartsX: 75,
             heartsY: 90,
