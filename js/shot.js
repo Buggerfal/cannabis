@@ -63,24 +63,18 @@ class Shot {
         let allEnemies = this._game.allEnemies;
 
         for (let i = 0; i < allEnemies.length; i++) {
-            // console.log(allEnemies[i]._enemy.position);
             let isCollision = getIsCollide(this._shot, allEnemies[i]);
 
             if (isCollision) {
-                //destroy shot
-                //Maybe Error
                 this._destroy();
 
                 if (!allEnemies[i].decreaseLife()) {
-                    //destroy Enemy
                     allEnemies[i].destroy();
                     allEnemies.splice(i, 1);
-                    return;
                 }
-
+                return;
             }
         }
-
     }
 
     _destroy() {
