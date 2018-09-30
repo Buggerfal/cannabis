@@ -3,7 +3,7 @@ class Enemy {
         this._app = game.app;
         this._game = game;
 
-        this._settings = new Settings();
+        this._settings = new Settings().enemy;
 
         this._sound = new Sound();
 
@@ -19,7 +19,7 @@ class Enemy {
         const circle = new PIXI.Graphics();
         circle.lineStyle(0);
         circle.beginFill(Enemy._auraColors[this._life - 1], 0.5);
-        circle.drawCircle(x, y, this._settings.enemy.width);
+        circle.drawCircle(x, y, this._settings.width);
         circle.endFill();
 
         this._app.stage.addChild(circle);
@@ -28,9 +28,9 @@ class Enemy {
         this._enemy = createSprite(this._app, {
             x: x,
             y: y,
-            width: this._settings.enemy.width,
-            height: this._settings.enemy.height,
-            path: 'images/enemy/' + Utils.random(1, 2) + '.png'
+            width: this._settings.width,
+            height: this._settings.height,
+            path: this._settings.imagePaths[Utils.random(0, this._settings.imagePaths.length - 1)]
         });
     }
 

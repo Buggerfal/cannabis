@@ -2,7 +2,13 @@ class Settings {
     constructor() {
         this.enemy = {
             width: 100,
-            height: 100
+            height: 100,
+            imagePaths: [
+                'images/enemy/1.png',
+                'images/enemy/2.png',
+                'images/enemy/3.png',
+                'images/enemy/4.png'
+            ]
         };
 
         this.shot = {
