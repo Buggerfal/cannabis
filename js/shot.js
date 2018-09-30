@@ -73,7 +73,7 @@ class Shot {
 
     _destroy() {
         new explosions(this._app, this._shot.x, this._shot.y);
-        this._game.hitEnemy();
+        this._game.updateScores();
         this._ticker.stop();
         this._ticker.destroy();
         this._shot.destroy();

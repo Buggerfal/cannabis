@@ -165,7 +165,7 @@ class Game {
         this.app.stage.addChild(drawPlayerMoney);
     }
 
-    hitEnemy() {
+    updateScores() {
         this._playerScore += 100;
         this._playerMoney += 1;
 
@@ -314,10 +314,3 @@ class Game {
 }
 
 let newGame = new Game();
-
-// Создлать уровень
-// Создать Инструкцию
-// get для жизней, очей и баксов
-// Utils create
-// Merge branch
-// Все функции и методы на процентах
