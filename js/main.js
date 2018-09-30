@@ -1,14 +1,6 @@
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 
-const styleForAllText = new window.PIXI.TextStyle({
-    fontFamily: 'myStyle',
-    fontWeight: 'bold',
-    fontStyle: 'normal',
-    fontSize: 30,
-    fill: '#ffffff'
-});
-
 class Game {
     constructor(game, speed) {
         this.settingsPosition = new Settings();
@@ -119,7 +111,7 @@ class Game {
         this.app._playerLvl = this._playerLevel;
 
         const xAndY = percentages(this._positionsPath.levelX, this._positionsPath.levelY);
-        const playerLvl = new PIXI.Text("Level " + this._playerLevel, styleForAllText);
+        const playerLvl = new PIXI.Text("Level " + this._playerLevel, Utils.textStyle);
 
         playerLvl.x = xAndY.x;
         playerLvl.y = xAndY.y;
@@ -138,7 +130,7 @@ class Game {
         this.app._playerScore = this._playerScore;
 
         const xAndY = percentages(this._positionsPath.scoreX, this._positionsPath.scoreY);
-        const score = new PIXI.Text("Score: " + this._playerScore, styleForAllText);
+        const score = new PIXI.Text("Score: " + this._playerScore, Utils.textStyle);
         score.x = xAndY.x;
         score.y = xAndY.y;
         score.anchor.set(0.5);
@@ -156,7 +148,7 @@ class Game {
         this.app._playerMoney = this._playerMoney;
 
         const xAndY = percentages(this._positionsPath.moneyX, this._positionsPath.moneyY);
-        const money = new PIXI.Text(this._playerMoney, styleForAllText);
+        const money = new PIXI.Text(this._playerMoney, Utils.textStyle);
         money.x = xAndY.x;
         money.y = xAndY.y + money.height;
         money.anchor.set(0.5);
@@ -288,7 +280,7 @@ class Game {
 
     showInfo() {
         const infoText = "Your high score : ";
-        const playerHightScore = new PIXI.Text(infoText + this._playerScore, styleForAllText);
+        const playerHightScore = new PIXI.Text(infoText + this._playerScore, Utils.textStyle);
 
         this._scoreTicker.stop();
         this._scoreTicker.destroy();
