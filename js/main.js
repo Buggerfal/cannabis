@@ -69,22 +69,12 @@ class Game {
 
     _initInterface() {
         this._player = new Player(this.app, WIDTH / 2, HEIGHT / 2);
-        this.drawAim(WIDTH / 2, HEIGHT / 2);
+        this._aim = new Aim(this.app, WIDTH / 2, HEIGHT / 2);
         this._drawPlayerScore();
         this.createHeart();
         this._drawIconMoney();
         this._drawPlayerLevel();
         explosions.initAnimation();
-    }
-
-    drawAim(x, y) {
-        this._aim = createSprite(this.app, {
-            x: x,
-            y: y,
-            width: this._sizesPath.aimWidth,
-            height: this._sizesPath.aimHeight,
-            path: 'images/aim.png'
-        });
     }
 
     createHeart() {
@@ -199,8 +189,7 @@ class Game {
 
     _onMouseMove(event) {
         this._player.rotateTo(event.clientX, event.clientY);
-        this._aim.x = event.clientX;
-        this._aim.y = event.clientY;
+        this._aim.move(event.clientX, event.clientY);
     }
 
     _playerShot(event) {
