@@ -4,19 +4,18 @@ class Player {
         this._x = x;
         this._y = y;
 
-        this._settings = new Settings();
-        this._size = this._settings._elementSizes;
+        this._settings = new Settings().player;
 
         this._draw();
     }
 
     _draw() {
         this._player = createSprite(this._app, {
-            path: 'images/player.png',
+            path: this._settings.imagePath,
             x: this._x,
             y: this._y,
-            width: this._size.playerWidth,
-            height: this._size.playerHeight
+            width: this._settings.width,
+            height: this._settings.height
         });
     }
 

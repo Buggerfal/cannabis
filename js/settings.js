@@ -15,7 +15,13 @@ class Settings {
             width: 128,
             height: 128,
             imagePath: 'images/aim.png'
-        }
+        };
+
+        this.player = {
+            width: 140,
+            height: 93,
+            imagePath: 'images/player.png'
+        };
 
         this._positionsForElements = {
             heartsX: 75,
@@ -39,8 +45,6 @@ class Settings {
             heartHeight: 75,
             buttonRestartWidth: 200,
             buttonRestartHeight: 200,
-            playerWidth: 140,
-            playerHeight: 93
         };
     }
 }
