@@ -17,14 +17,6 @@ class Enemy {
     }
 
     _draw(x, y) {
-        this._enemy = createSprite(this._app, {
-            x: x,
-            y: y,
-            width: this._size.enemyWidth,
-            height: this._size.enemyHeight,
-            path: 'images/enemy/' + Utils.random(1, 2) + '.png'
-        });
-
         const circle = new PIXI.Graphics();
         circle.lineStyle(0);
         circle.beginFill(Enemy._auraColors[this._life - 1], 0.5);
@@ -33,6 +25,14 @@ class Enemy {
 
         this._app.stage.addChild(circle);
         this._aura = circle;
+
+        this._enemy = createSprite(this._app, {
+            x: x,
+            y: y,
+            width: this._size.enemyWidth,
+            height: this._size.enemyHeight,
+            path: 'images/enemy/' + Utils.random(1, 2) + '.png'
+        });
     }
 
     _moveEnemy() {
